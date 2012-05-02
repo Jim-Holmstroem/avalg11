@@ -1,0 +1,347 @@
+\documentclass[a4paper,twoside=false,abstract=false,numbers=noenddot,
+titlepage=false,headings=small,parskip=half,version=last]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+\usepackage[colorlinks=true, pdfstartview=FitV,
+linkcolor=black, citecolor=black, urlcolor=blue]{hyperref}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{multirow}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+\newtheorem*{remark}{Remark}
+
+\newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
+\newcommand{\QQ}{\ensuremath{\mathbb{Q}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\id}{id}
+
+\renewcommand{\labelenumi}{(\alph{enumi})}
+
+\author{Jim Holmstr�m - 890503-7571}
+\title{Avancerade algoritmer DD2440}
+\subtitle{Homework B}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+%-----------------------
+\begin{exercise}
+Using the 0/1-principle for sorting networks, either show that the following
+sorting network correctly sorts 4 inputs, or find an input where it fails.
+\end{exercise}
+\begin{solution}
+0/1-principle states that it will correctly sort any input if it can sort all
+possible sequences of ${0,1}$. This reduces the combination of input to check
+in an $n$-wire network from $n!$ to $2^n$.\\
+In our case we will need to validate $2^4=16$ combinations.
+
+The comparators will only swap values if they are misplaced, thus all
+combinations already sorted will come out the same way (sorted).\\
+
+The comparators only swaps values so $\sum{x}=\sum{x'}$ (where $\bar{x}=$input
+and $\bar{x}'=$output)
+
+$\forall x : \sum{x}=0,4$\\
+Trivially $\bar{x}=0000$ and $\bar{x}=1111$ will still be sorted.\\
+$\forall x : \sum{x}=1$\\
+The one set input-value will "bubble" down from position 1,2 and 3 (and already be
+sorted for position 4).\\ 
+$\forall x : \sum{x}=3$\\
+By symmetry this also works for the one unset variable in the same way as
+above.
+$\forall x : \sum{x}=2$\\
+    $\bar{x}=0011$ is already sorted. Those 5 left is put in an matrix for
+    batch calculations, if some rows become equal after a pass only one of them is
+    considered since they will all act the same from there on.
+    
+    \begin{equation*}
+        \tilde{X}_2= 
+        \left(
+        \begin{matrix}
+            
+                                     0 & 0 & 1 & 1 & 1 \\
+                                     1 & 1 & 0 & 0 & 1 \\
+                                     0 & 1 & 0 & 1 & 0 \\
+                                     1 & 0 & 1 & 0 & 0
+       \end{matrix}
+       \right)
+    \end{equation*}
+    
+    \begin{equation*} 
+        \left(
+        \begin{matrix}
+            
+                                     0 & 0 & 1 & 1 & 1 \\
+                                     1 & 1 & 0 & 0 & 1 \\
+                                     0 & 1 & 0 & 1 & 0 \\
+                                     1 & 0 & 1 & 0 & 0
+       \end{matrix}
+       \right) \\
+        = \{\mbox{1-pass: compare 1-2 and 3-4}\} =
+        \left(
+        \begin{matrix}
+            
+                                     0 & 0 & 0 & 0 & 1 \\
+                                     1 & 1 & 1 & 1 & 1 \\
+                                     0 & 0 & 0 & 0 & 0 \\
+                                     1 & 1 & 1 & 1 & 0
+       \end{matrix}
+       \right) \\
+        =
+        \left(
+        \begin{matrix}
+            
+                                     0 & 1 \\
+                                     1 & 1 \\
+                                     0 & 0 \\
+                                     1 & 0
+       \end{matrix}
+       \right)
+       =
+    \end{equation*}
+    \begin{equation*}
+       = \{\mbox{2-pass: compare 2-3}\} =
+        \left(
+        \begin{matrix}
+            
+                                     0 & 1 \\
+                                     0 & 0 \\
+                                     1 & 1 \\
+                                     1 & 0
+       \end{matrix}
+       \right)
+        = \{\mbox{3-pass: compare 1-2 and 3-4}\} =
+        \left(
+        \begin{matrix}
+            
+                                     0 & 0 \\
+                                     0 & 1 \\
+                                     1 & 0 \\
+                                     1 & 1
+       \end{matrix}
+       \right)
+        =
+    \end{equation*}
+    \begin{equation*}
+        =\{\mbox{4-pass: compare 2-3}\} =
+        \left(
+        \begin{matrix}
+            
+                                     0 & 0 \\
+                                     0 & 0 \\
+                                     1 & 1 \\
+                                     1 & 1
+       \end{matrix}
+       \right)
+    \end{equation*}
+
+Now we have proven that all 16 combinations of binary input will be sort and by
+the 0/1-principle the net will be a valid sorting net. $\qed$
+
+\end{solution}
+%-----------------------
+\begin{exercise}
+Crack RSA! Given the public RSA key $(n,e)=(5192042249411,3419183406883)$, find
+the decryption exponent $d$ and find a number $x$ that encrypts to your
+ten-digit personal number. If you wish, you may use big integer support (but
+not functions specifically tailored for RSA).
+\end{exercise}
+\begin{solution}
+Firstly we factor the semiprime $n=pq$ using a simple implementation of
+Pollard-rho with $f(x)=x^2+c$ picking $c=1$
+
+\begin{verbatim}
+    function pollard_rho(n):
+        d = 1,x = (f(x0)%n,f(f(x0)%n)
+        while d==1
+            x = (f(x[0])%n,f(f(x[1])%n)
+            d = gcd(abs(x[1]-x[0]),n)
+        return (d,n/d)
+\end{verbatim}
+
+We get $n=5192042244911=1532371 \cdot 3388241 = pq$
+
+\begin{equation*}
+    \varphi(n)=\varphi(pq)=\{\mbox{p,q primes}\}=(p-1)(q-1) = 5192037328800
+\end{equation*}
+And the private key $d$ is:
+\begin{equation*}
+    d=e^{-1} \ (mod \ \varphi(n))
+\end{equation*}
+\begin{equation*}
+    ed=1 \ (mod \ \varphi(n))
+\end{equation*}
+\begin{equation*}
+    ed - K\varphi(n)=1
+\end{equation*}
+
+$d$ is then calculated by the extended euclidean algorithm to be
+\underline{$d=1456182194347$} and one can verify that it is indeed a modular inverse to
+$e$. (K is irrelevant)
+
+\begin{equation} \label{eq:encrypt}
+    c=m^e \ (mod \ n)
+\end{equation}
+\begin{equation} \label{eq:decrypt}
+    m=c^d \ (mod \ n)
+\end{equation}
+
+Since we are dealing with large exponents one cannot use the naive exponentiation 
+instead we use modular exponentiation by repeated squaring to bring down the
+complexity. The main idea is this:
+
+%\begin{equation}
+%    x^n = 
+%    \begin{cases}
+%    1                      & n=0 \\
+%    x(x^{\frac{n-1}{2}})^2 & n \ \mbox{odd} \\
+%    (x^{\frac{n}{2}})^2    & n \ \mbox{even}
+%    \end{cases}
+%\end{equation}
+
+\begin{equation}
+    a^{2n} \equiv (a^n)^2 \ ( mod \ m)
+\end{equation}
+\begin{equation}
+    a^{2n+1} \equiv a^1(a^n)^2 \ ( mod \ m )
+\end{equation}
+
+An implementation:
+\begin{verbatim}
+function superpower(x,n,m):
+    ans = 1
+    while n: //int2bin
+        n_bits.append(n%2)
+        n>>=1
+    n_bits.reverse()
+
+    for bit in n_bits:
+        ans = (ans*ans)%m 
+        if bit: #"odd"
+            ans = (ans*x)%m
+    return ans
+\end{verbatim}
+
+To find the number $x$ that encrypts to my personal number $(8905037571)$ we
+need to go the other way by decrypting. \\
+$m=c^d \ (mod \ n) =\
+$\verb+superpower+$(c,d,n)=\{c=8905037571\}=\underline{2534986786188}$
+
+\end{solution}
+%-----------------------
+\begin{exercise}
+Multiply the following polynomials using Karatsuba's algorithm.\\
+$x^3+3x^2+x$ and $2x^3-x^2+3$.\\
+You only need to show the top-most call, what recursive calls are made from the
+top-most level, what those calls return and how the final result is computed.
+
+\end{exercise}
+\begin{solution}
+
+Karatsuba's algorithm is used as base.
+\begin{equation} \label{eq:karatsuba}
+\begin{split}    
+    (ax+b)(cx+d) = \underbrace{(a \cdot c)}_{=u}x^2+\underbrace{(a \cdot d+b
+    \cdot c)}_{=w-u-v}x+\underbrace{(b \cdot d)}_{=v} \\
+    \begin{cases}
+        u=a \cdot c \\
+        v=b \cdot d \\
+        w=(a+b)\cdot (c+d) = ac+bc+ad+bd
+    \end{cases}
+\end{split}
+\end{equation}
+
+All higher order polynoms can be broken up this way:
+
+\begin{equation} \label{eq:polysplit}
+\begin{split}
+    p(x) = & \sum_0^{2t-1}p_ix^i
+    =\underbrace{\sum_0^{t-1}p_ix^i}_{b(x)}
+    +x^t\underbrace{\sum_0^{t-1}p_{t+i}x^i}_{a(x)}
+    =a(x)x^t+b(x) \\
+    q(x) = & \{\mbox{The same way as above}\} = c(x)x^t+d(x)
+\end{split}
+\end{equation}
+Then taking $p(x)q(x)$ yields:
+\begin{equation}
+\begin{split}
+    p(x)q(x) = & (a(x)x^t+b(x))(c(x)x^t+d(x))= \{x^t \leftrightarrow x \ ,\mbox{
+    Karatsuba's algorithm}\} = \\
+    = & \underbrace{(a(x)c(x))}_{=u(x)}x^{2t}
+    +\underbrace{(a(x)d(x)+b(x)c(x))}_{=w(x)-u(x)-v(x)}x^t
+    +\underbrace{(b(x)d(x))}_{=v(x)}
+\end{split}
+\end{equation}
+
+Our polynoms $(x^3+3x^2+x-1)(2x^3-x^2+3)$ is represented as $(1,3,1,-1)$ and
+$(2,-1,0,3)$ in memory, $x^i$'s coefficient is the variable at position $i$.
+All operations like addition and subtraction can be done termwise.
+
+First split the polynoms in the middle (trivial if one looks at the memory
+representation):
+\begin{equation}
+    (x^3+3x^2+x-1)(2x^3-x^2+3)=\{(\ref{eq:polysplit})\}=
+    \underline{((x+3)x^2+(x-1))((2x-1)x^2+0x+3)}
+\end{equation}
+
+Then executing Karatsuba's algorithm
+\begin{equation*}
+    \begin{cases}
+        u(x) = (x+3)(2x-1)=\{\mbox{Recursive call to Karatsuba's algorithm}\} =
+        \underline{2x^2+5x-3} \\
+        v(x) = (x-1)(0x+3)= \{\mbox{Recursive call to Karatsuba's algorithm}\}
+        =\underline{3x-3} \\ 
+        w(x) = (2x+2)(2x+2)=\{\mbox{Recursive call to Karatsuba's algorithm}\} =
+        \underline{4x^2+8x+4}
+    \end{cases}
+\end{equation*}
+
+Karatsuba's algorithm then returns\\
+    $(a(x)x^2+b(x))(c(x)x^2+d(x))= \{(\ref{eq:karatsuba})\}
+    = u(x)x^4+(w(x)-u(x)-v(x))x^2+v(x) \\
+    = (2x^2+5x-3)x^4+(2x^2+10)x^2+(3x-3) =\underline{2x^6+5x^5-x^4+10x^2+3x-3}$
+
+\end{solution}
+%-----------------------
+\begin{exercise}
+A positive odd integer n is a Carmichael number if
+\begin{enumerate}
+\item
+it is composite
+\item
+$\forall$ numbers $1 \le a < n : gcd(a,n)=1$, it holds that $a^{n-1}\equiv 1
+    \ (mod\ n)$
+\end{enumerate}
+Show that it is easy to find a non-trivial factor of a Carmichael number. More
+precisely, there is a polynomial-time algorithm for finding a non-trivial
+factor with probability $> 1/2$.\\
+Explain your algorithm, why it works, and analyze its complexity.
+\end{exercise}
+\begin{solution}
+
+\end{solution}
+
+
+
+\end{document}
+

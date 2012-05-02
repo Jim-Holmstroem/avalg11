@@ -1,0 +1,417 @@
+\documentclass[a4paper,twoside=false,abstract=false,numbers=noenddot,
+titlepage=false,headings=small,parskip=half,version=last]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+\usepackage[colorlinks=true, pdfstartview=FitV,
+linkcolor=black, citecolor=black, urlcolor=blue]{hyperref}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{multirow}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+\usepackage{fullpage}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+\newtheorem*{remark}{Remark}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newcommand{\NN}{\ensuremath{\mathbb{N}}}
+\newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
+\newcommand{\QQ}{\ensuremath{\mathbb{Q}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\Fourier}{\ensuremath{\mathcal{F}}}
+\newcommand{\Laplace}{\ensuremath{\mathcal{L}}}
+
+\newcommand{\tab}{\hspace*{2em}}
+
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\id}{id}
+
+
+\renewcommand{\labelenumi}{(\alph{enumi})}
+
+\author{Jim Holmström - 890503-7571}
+\title{Avancerade algoritmer DD2440}
+\subtitle{Homework D}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+%-----------------------
+\begin{exercise}
+{\bf
+Analyze the amortized complexity of a series of inserts and deletes assuming.
+\begin{itemize}
+    \item The table starts empty (num=0) and with (size = 0) 
+    \item If the table is of size zero and an element is added it grows to size 1.
+    \item If a tabl of size $s \le 1$ is full and an element is added, the table is grown to size $2n$, elements are relocated and the new element is added.
+    \item If, after removal, a table of size $s \le 1$ has less than $s/3$ elements is shrunk to size $\lceil 2s/3 \rceil$, and the elements are relocated.
+    \item The cost of adding or deleting an element is 1 (except if the table grows or shrinks)
+    \item The cost of growing or shrinking the table is equal to the number of elements moved as a result of relocation.
+\end{itemize}
+Use the potential function $\Phi = |2$num$-$size$|$
+}
+\end{exercise}
+\begin{solution}
+Define: $\alpha_i = \frac{num_i}{size_i}$
+
+We always know that $ 1/3 < \alpha_{i-1} < 1$ else the size would have already
+increased or decreased.
+$\Phi_i = |2num_i-size_i|=|(2\alpha_i-1)size_i|=|c_i|$
+
+%\begin{equation}
+%    \[ 
+%   |x| = \left\{\begin{array}{ll}
+%                    x & $x \geq 0$\\
+%                   -x & $x < 0$.
+%         \end{array}\right. 
+%    \] 
+%\end{equation}
+\begin{lemma}
+\label{absfunction}
+Using the fact that $b>a,|c-a|-|c-b|$ is $(b-a)$ when $c \le a$, $(a-b)$ when
+$c \ge b$ and takes every value (in the continuous case) in between when
+$a<c<b$ by continuity reasons, more precisely $2c-(a+b)$  
+\end{lemma}
+Insert:\\
+
+Without expand we have $size_i=size_{i-1} \wedge num_i=num_{i-1}+1$
+
+\begin{equation}
+\begin{split}
+    \hat{c}_i & = c_i + \Phi_i - \Phi_{i-1} \\
+              & = 1 + |2num_i-size_i|-|2num_{i-1}-size_{i-1}| \\
+              & = 1 + |c_i| - |c_i-2| \\
+              & = 1 + \{c_i\ge 2:c_i-c_i-2  =-2,c_i\le 0:-c_i+c_i+2 = 2,c_i =
+              1: 0 \} \\
+\end{split}
+\end{equation}
+
+With expand we have $size_i=2\cdot size_{i-1} \wedge num_i=num_{i-1}+1$
+
+$
+    \hat{c}_i  = c_i + \Phi_i - \Phi_{i-1} \\
+               = 1 + |2num_i-size_i|-|2num_{i-1}-size_{i-1}| \\
+               = 1 + |2(num_{i-1}+1)-size_{i-1}/2| - |2(num_{i-1}-size_{i-1}| \\
+               = 1 + |2(\alpha_{i-1}-1/2)size_{i-1}+2| - |(2\alpha_{i-1}-1)size_{i-1}| \\
+               = 1 + (2\alpha_{i-1}-1/2-|2\alpha_{i-1}-1|)size_{i-1} + 2 \\
+                \{\mbox{Can for all ranges find a $\alpha$ that eliminates
+                     $size_{i-1}$ and bounds the equation}\} \\
+               < 0*size_{i-1} + 3 = 3 \\ 
+$
+
+Delete:\\
+
+%$\alpha_{i-1}$
+
+%In the case $\alpha_i \ge 1/2$.\\
+Without shrinking we have $size_i=size_{i-1} \wedge num_i=num_{i-1}-1$\\
+\begin{equation}
+\begin{split}
+    \hat{c}_i & = c_i + \Phi_i - \Phi_{i-1} \\
+              & = 1 + |2num_i-size_i|-|2num_{i-1}-size_{i-1}| \\
+              & = 1 + |c_i|-|c_i+1| \\
+              & = \{\mbox{In the same way as the first equation}\} = 1 + \{-1,1\}
+\end{split}
+\end{equation}
+
+%In the case $\alpha < 1/2$.\\
+With shrinking we have $size_i=\lceil (2/3)\cdot size_i-1\rceil \wedge num_i=num_{i-1}-1$\\
+Ignoring the ceiling in the bound-analysis since it can only contribute with
+$1$.\\
+
+\begin{equation}
+\begin{split}
+    \hat{c}_i & = c_i + \Phi_i - \Phi_{i-1} \\
+              & = 1 + |2num_i-size_i|-|2num_{i-1}-size_{i-1}| \\
+              & = 1 + |2(\alpha_{i-1}-2/3)s_{i-1}-|(2\alpha{i-1}-1)\cdot
+              size_{i-1}| \\
+              & = \{\alpha_{i-1}>1/3 \mbox{and ignoring a constant number of
+              border-cases}\} \\
+              & = 1-2+ (2\alpha_{i-1}-2/3-|2\alpha_{i-1}-1|)size_{i-1} \\
+              & = \{\mbox{In the same way as before}\} < 1-2 + 0*size_{i-1} = -1
+\end{split}
+\end{equation}
+
+And since all is bounded by a constant the amortized cost for insert/delete is $O(1)$
+That is any sequence of $n$ operations is $O(n)$
+
+\end{solution}
+%\clearpage
+%-----------------------
+\begin{exercise}
+{\bf
+Let \verb+makeSet+,\verb+union+, and \verb+findSet+ be the three operations of the union-find data structore implmented using a disjoint-set forest with union by rank and path compression.
+Draw a picture of the data structure that results from running the following code. 
+\begin{verbatim}
+for (i = 1; i <= 16; i++)
+    makeSet(i)
+for (i = 1; i <= 15; i += 2)
+    union(i, i+1)
+for (i = 5; i <= 13; i += 4)
+    union(i, i+2)
+#draw the datastructure at this point in time
+union(3, 15)
+union(10, 8)
+union(16, 2)
+union(13, 9)
+#draw the datastructure at this point in time
+\end{verbatim}
+}
+\end{exercise}
+\begin{solution}
+I'm sorry for the bad representation but couldn't get the graphics to work
+properly. \\
+\begin{verbatim}
+(value,rank,p)
+\end{verbatim}
+And splitting the different trees by spaces when it's possible without
+reordering the nodes.\\
+
+After first for-loop:\\
+\begin{verbatim}
+( 1, 0, 2)
+( 2, 1, 2)
+
+( 3, 0, 4)
+( 4, 1, 4)
+
+( 5, 0, 6)
+( 6, 1, 6)
+
+( 7, 0, 8)
+( 8, 1, 8)
+
+( 9, 0,10)
+(10, 1,10)
+
+(11, 0,12)
+(12, 1,12)
+
+(13, 0,14)
+(14, 1,14)
+
+(15, 0,16)
+(16, 1,16)
+\end{verbatim}
+After second for-loop:\\
+
+\begin{verbatim}
+( 1, 0, 2)
+( 2, 1, 2)
+
+( 3, 0, 4)
+( 4, 1, 4)
+
+( 5, 0, 6)
+( 6, 1, 8)
+( 7, 0, 8)
+( 8, 2, 8)
+
+( 9, 0,10)
+(10, 1,12)
+(11, 0,12)
+(12, 2,12)
+
+(13, 0,14)
+(14, 1,16)
+(15, 0,16)
+(16, 2,16)
+\end{verbatim}
+After the three first unions:\\
+\begin{verbatim}
+( 1, 0, 2)
+( 2, 2, 2) //union(16,2)
+
+( 3, 0, 4)
+( 4, 1,16) //union(3,15)
+
+( 5, 0, 6)
+( 6, 1, 8)
+( 7, 0, 8)
+( 8, 3, 8) //union(10,8)
+
+( 9, 0,10)
+(10, 1,12)
+(11, 0,12)
+(12, 2, 8) //union(10,8)
+
+(13, 0,14)
+(14, 1,16)
+(15, 0,16)
+(16, 2,16)
+
+\end{verbatim}
+After the last union:\\
+\begin{verbatim}
+( 1, 0, 2)
+( 2, 2, 2) 
+
+( 3, 0, 4)
+( 4, 1,16)
+
+( 5, 0, 6)
+( 6, 1, 8)
+( 7, 0, 8)
+( 8, 3, 8)
+
+( 9, 0, 8) //2nd path compression
+(10, 1, 8) //3rd path compression
+(11, 0,12)
+(12, 2, 8)
+
+(13, 0,16) //1st path compression
+(14, 1,16)
+(15, 0,16)
+(16, 2, 8) //union(13,9)
+\end{verbatim}
+\end{solution}
+%\clearpage
+%-----------------------
+\begin{exercise}
+{\bf
+In class we analyzed disjoint-set forest with union by rank with path compression.
+In the analsysis we used without proof that for any element, its rank never
+exceeds $log_2n$, prove this. More precisly.
+Show that in a sequence of $m$ operation where $n$ operations are
+\verb+makeSet+ no element gets rank more than $log_2n$.
+}
+\end{exercise}
+\begin{solution}
+Having multiple trees will just shrink $n$ for the ``deepest'' (highest rank) tree, so it won't even
+be considered.
+Firstly the trivial case is easy to so that it holds: \\
+$log_2(1)=0$\\
+$log_2(2)=1$\\
+since there only exists one way to put them together up to permutation.
+The rank only increases when 2 trees with the same root rank is linked.
+And when linked the top root will have at least 2 siblings, the original one
+and the one that it's linked to's root.
+Applying this recursivly all the nodes except for a constant number of ones
+near the leaves will have at least 2 siblings.
+Counting the number of elements in the root we have at least $2^k$ number of
+elements and
+
+
+
+%Since there is no way to connect something that doesn't already have a
+%connection (except for starting one with constant length) else there will
+%always be path-compression. <...> lite luddigt men iden kommer fram iaf
+
+%Having multiple trees will trivially only increase the number of components for
+%a given rank/depth.
+
+%Linking together two trees will always result in at least two links to the root
+%and when doing path compression
+
+%Path compression just adds to the compression of the treedepth and one way to
+%trying to avoid path compression is to just JOIN(root_i,root_j)
+%and this will always (except for the start case when x.p.p=x.p but this will
+%only happen when tree is of depth =2, is this true? Verify) yield a double
+%connection. And now since we know that all connections except for a constant
+%amount near the leaves have atleast 2 connections (more with pathcompression)
+%when can easily conclude that the one disjoint set will have atleast 2^k (<---
+%must include the k value that is the rank, BALANCE IS KEY, the smaller tree
+%will always come under the ) number
+%path compression must be included!!!
+
+%rank will only increase when the to joined trees are of the same length
+
+
+%of elements
+
+\end{solution}
+%\clearpage
+%-----------------------
+\begin{exercise}
+{\bf
+There are $n$ professors and $2n$ classrooms. The input is a table \verb+t[1..n,1..2*n]+ where \verb+t[p, c]+ is the distance from the office of professor p to a classroom c.
+Design an efficient algorithm that finds a way to assign each professor to a classroom so that each professor gets a classroom and no classroom is used by more than one professor, and maximize the sum of the distance the professors need to walk if they all walk from their offices to their classrooms.
+Your algorithm should run in time polynomial in $n$, and you may analyze it using unit cost.
+For full credit, its complexity should be noticeably better then $O(n^4)$
+}
+\end{exercise}
+\begin{solution}
+Firstly create $2n-n=n$ ``empty-classroom''-professors with all their distances
+to the classrooms set to zero $(n^2)$, this is to make a perfect matching.
+Then you want to make an complete assignment of professors to classrooms,
+including the ``empty-classroom''-professors to classrooms, 
+so that each professor gets an unique classroom.\\
+\begin{lemma}
+Adding or subtracting a distance $c$ to all distances such that no distance is
+negative, won't change the assignment.\\
+\end{lemma}
+\begin{lemma}
+If all distances are positive $max(distances)$ has the same solution as
+$min(-distances)$ because mutual distances is still the same and ordering is
+just shifted.\\
+\end{lemma}
+Create a new set of edges $distance'_{ij} = max(distance_{ij})-distance_{ij}$ ensuring that all
+are still positive and has the same solution as the original problem by the
+lemmas above. $O(n^2)$\\
+
+The problem can now be easily solved as a minimum weighted matching problem in
+a bipartite graph by for example the Hungarian algorihm running in $O(n^3)$\\
+
+Apply this solution to the original problem preserving indeces and this will be
+a correct solution by the lemmas. $O(n^2)$
+
+This results in a solution in the running time $O(n^3) \qed$
+\end{solution}
+%\clearpage
+%-----------------------
+\begin{exercise}
+{\bf
+This problem is the same as Problem 4, except that we have a different target function.
+This time you should maximize the distance that the professor with the shortest path need to take.
+}
+\end{exercise}
+\begin{solution}
+
+Sort all edges according to their weights in a new list edgelist.
+$O(|E|+|E|log(|E|))=O(n^2log(n))$ \\
+
+Binarysearch on indeces $i,w_i$ in the sorted edgelist: //$O(log(|E|)=log(n))$ \\
+    %\verb+first+ = get the first edge with this value $O(|E|)=O(n^2)$ \\
+    %Create a new unweighted set of edges $uw_i$ from \verb+first+ and higher 
+    %that have weight $w_i$ or
+    %higher. $O(|E|)=O(n^2)$\\
+\tab    Create a unweighted set of edges $uw_i$ from $w_i$ and higher
+from edgelist. $O(n^2)$\\
+\tab    if(bipartite-matching($uw_i$)=n): //it exists a "perfect" match\\
+\tab    \tab    try higher value in the binarysearch \\
+\tab    else:\\
+\tab    \tab    try lower value in the binarysearch \\
+
+Where the bipartite-matching for an unweighted graph can be found in ``Notes
+for the course advanced algorithms'' by Johan Håstad in chapter 13.0 and has a 
+complexity of $O(n^2\sqrt{n})$ \\
+
+So the total running time in the binarysearch is $O(n^2\sqrt{n}log(n))$
+
+\end{solution}
+
+\end{document}

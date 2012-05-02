@@ -1,0 +1,383 @@
+\documentclass[a4paper,twoside=false,abstract=false,numbers=noenddot,
+titlepage=false,headings=small,parskip=half,version=last]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+\usepackage[colorlinks=true, pdfstartview=FitV,
+linkcolor=black, citecolor=black, urlcolor=blue]{hyperref}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{multirow}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+
+\theoremstyle{remark}
+\newtheorem*{solution}{Solution}
+\newtheorem*{remark}{Remark}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newcommand{\NN}{\ensuremath{\mathbb{N}}}
+\newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
+\newcommand{\QQ}{\ensuremath{\mathbb{Q}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\Fourier}{\ensuremath{\mathcal{F}}}
+\newcommand{\Laplace}{\ensuremath{\mathcal{L}}}
+
+
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\id}{id}
+
+
+\renewcommand{\labelenumi}{(\alph{enumi})}
+
+\author{Jim Holmström - 890503-7571}
+\title{Avancerade algoritmer DD2440}
+\subtitle{Homework C}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+%-----------------------
+\begin{exercise}
+{\bf
+Multiply the following two polynomials using FFT.
+
+\begin{equation*}
+p(x)=x^3+3x^2+x-1
+\end{equation*}
+\begin{equation*}
+q(x)=2x^3-x^2+3
+\end{equation*}
+
+If you use a recursive version of FFT, you only need
+to show the top-most call to FFT (and FFT inverse),
+what recursive calls are made from the top-most level,
+what those calls return and how the final result is computed.
+}
+\end{exercise}
+\begin{solution}
+
+Algorithm:\\
+
+Define $r = pq$\\
+$p=\displaystyle\sum_{i=0}^m{p_i x^i}$\\
+$q=\displaystyle\sum_{i=0}^m{q_i x^i}$\\
+    $r = pq = \displaystyle\sum_{i=0}^m{\displaystyle\sum_{j=0}^m{ p_i q_j x^{i+j} }} = 
+    \{$Cauchy product$\} = 
+    \displaystyle\sum_{k=0}^{2m}{ 
+        \left( \displaystyle\sum_{i=0}^{k}{p_i q_{k-i}} \right) x^k  
+    }=
+    \displaystyle\sum_{i=0}^{2m}{ 
+        r_k x^k  
+    } $    
+
+Where ${c_k}$ is the convolution between ${p_i}$ and ${q_j}$\\
+Now using the ordinary shortcut in the fourier domain to calculate the convolution using the convolution theorem.\\
+
+\begin{list}{*}{}
+    \item $\hat{p}=\Fourier\{p_i\} $ and $\hat{q}=\Fourier\{q_j\}$ using fft.
+    \item $\hat{r}=\hat{p} \cdot \hat{q}$, using termvise multiplication. 
+    \item $\Fourier^{-1}{\hat{c}}$
+\end{list}
+
+Represent the polynomails $p,q$ as vectors of their coefficients where the constant coefficient is the first element
+$p=(-1,1,3,1,0,0,0,0)$ and $q=(3,0,-1,2,0,0,0,0)$  (note the zero padding)
+
+The MATLAB code would have been: \verb+ifft(fft([-1,1,3,1,0,0,0,0]).*fft([3 0 -1 2 0 0 0 0]))+ wich yields \verb+[-3 3 10 0 -1 5 2 0]+ \\
+
+Now showing the first steps by hand using the Cooley-Tukey FFT algorithm:\\
+Using the $8^{th}$ root of unity as base $e^{2\pi i \frac{k}{8}}$
+The principle of Cooley-Tukey:\\
+
+$\hat{x}_k = \displaystyle\sum_{n=0}^{N-1}{x_n e^{-2\pi i \frac{ n}{N} k}} = \{ $Break it up in even and odd part$\}= 
+\displaystyle\sum_{m=0}^{N/2-1}{x_{2m} e^{-2\pi i \frac{ 2m}{N} k}}+
+\displaystyle\sum_{m=0}^{N/2-1}{x_{2m+1} e^{-2\pi i \frac{ 2m+1}{N} k}}  
+=
+\displaystyle\sum_{m=0}^{N/2-1}{x_{2m} e^{-2\pi i \frac{ 2m}{N} k}}+
+e^{-2\pi i \frac{1}{N} k}\displaystyle\sum_{m=0}^{N/2-1}{x_{2m+1} e^{-2\pi i \frac{ 2m}{N} k}}  
+$
+Where to two sums are halfsized fft's and running the same argument again until we hit size $1$ wich trivially has itself as fft.\\
+
+In our case for $p$ we have 
+$\hat{p}_k = [$fft($[-1,3,0,0])_{2k}+(\sqrt{2}-\sqrt{2}i)^k\cdot$fft($[1,1,0,0])_{2k}]$ 
+$\hat{q}_k = [$fft($[3,-1,0,0])_{2k},(\sqrt{2}-\sqrt{2}i)^k\cdot$fft($[0,2,0,0])_{2k}]$ 
+
+Pointwise multiplication on $\hat{p}$ and $\hat{q}$ yields $\hat{r}$
+ifft are almost the same thing as fft except for that the root of unity 
+goes in the other direction that is the minus sign is replaced with a plus.
+
+
+ifft the same way as above both with interchanged sign yields
+
+$r =[-3,3,10,0,-1,5,2,0]$  
+
+\end{solution}
+%\clearpage
+%-----------------------
+\begin{exercise}
+{\bf
+Let $A = \{ a_{i,j} : a_{i,j} = a_{i-1,j-1} \bigwedge a_{i,1} = a_{i-1,n} \}$
+for $i,j \in [2,n]$. 
+Give an $O(n log(n))$-time algorithm for computing $Ax$ where $x$ is a vector of length $n$
+}
+\end{exercise}
+\begin{solution}
+Note that all indices in the following equations are beginning at $0$ and taken modulo $n$ 
+The matrix $A$ is circulant matrix.
+\begin{lemma} \label{Slider}
+    $A \in Circulant \Rightarrow$ $A_{i,j}=A_{i+k,j+k} \forall k \in \ZZ$ 
+\end{lemma}
+\begin{proof}
+    Repeating the property $A_{i,j}=A_{i-1,j-1}$ together with 
+    $a_{i,0}=a_{i-1,n-1}$\footnote{To make it work modulo $n$} $k \in \NN$
+    times yields $A_{i,j}=A_{i-k,j-k}$
+    then exchanging $(i-k,j-k) \leftrightarrow (i,j) \Rightarrow A_{i,j}=A_{i+k,j+k}$
+    showing that it works for both directions and thus one can instead say $k \in \ZZ$
+\end{proof}
+\begin{lemma}
+    $A \in $Circulant $\Rightarrow$
+    $Ax = a \ast x $ \footnote{Circular convolution} where $a$ is the first colomn of $A$
+    \end{lemma}
+\begin{proof}
+    $a \ast x = \{$Since convolution is commutative$\} = (x \ast a)_k \stackrel{def}{=} 
+    \displaystyle\sum_{i=0}^{n-1}{x_i a_{k-i}} = \sum{x_i A_{k-i,0}} = \{$Using lemma$\} = \sum x_i A_{k,i} = \sum A_{k,i} x_i \stackrel{def}{=} (Ax)_k = Ax$
+\end{proof}
+
+We also are going to use the convolution theorem:
+$\Fourier\{c \ast x\}=\Fourier\{c\} \cdot \Fourier\{x\}$
+\footnote{Where $\cdot$ is pointwise multiplication,
+that is treating \Fourier\{x\} and \Fourier\{c\} as discrete functions.} 
+
+The algorithm:
+\begin{list}{*}{}
+ \item Pickout $a$ from $A$ wich is $O(n)$
+ \item Calculate $\hat{a}=\Fourier\{a\}$ and $\hat{x}=\Fourier\{x\}$ 
+ with fft where both $a$ and $x$ is of length $n$, fft is known to have implementations running at $O(nlogn)$
+ \item $\widehat{Ax} = \hat{a} \cdot \hat{b}$ still having the same length, pointwise multiplication runs at $O(n)$
+ \item $Ax = \Fourier^{-1}\{\widehat{Ax}\}$ with ifft, similary runs in $O(nlogn)$ 
+\end{list}
+
+The algorithm gives us the vector $Ax$ in $O(nlogn)$ operations. $\qed$
+
+\end{solution}
+%\clearpage
+%-----------------------
+\begin{exercise}
+{\bf
+Show how to formulate the Vertex Cover problem as an integer linear program
+(with a polynomial number of constraints).
+}
+\end{exercise}
+\begin{solution}
+
+Vertex Cover problem:
+Find the minimal vertex cover $C$ in a graph $G$ with vertices $V$ and edges $E$
+
+Define $\bar{x} \in \{0,1\}^n$ as 
+\[
+  x_i = \left\{
+  \begin{array}{l l}
+        1 & \quad \text{if vertex-$i \in C$ }\\
+        0 & \quad \text{else}\\
+  \end{array} \right.
+\]
+and $\tilde{E}$ as 
+\[
+    e_{ij} = \left\{
+    \begin{array}{l l}
+        1 & \quad \text{if there is an edge between vertex-$i$ and vertex-$j$}\\
+        0 & \quad \text{else}\\
+    \end{array} \right.
+\]
+
+$\tilde{E}^T=\tilde{E}$ (undirected graph)
+$\bar{x} \ge \bar{0}$
+
+With the constraint ``An edge of the graph has at least on vertex in the vertex-cover set connected to it''
+$e_ij=1 => x_i=1 \verb+ OR + x_j=1$ or more mathematical notation $e_{ij}=1 \Rightarrow x_i + x_j \ge 1$ to get a lower amount of constraints. 
+
+Define the vector $c = (1,1,..,1)$ with length $n$, representing that each vertice gets the same weight.\\
+We want to minimize the number of vertices in the cover that is $\sum{x_i} = |\hat{x}|_1 = c^T x $
+
+To sum up we have:\\
+$min\{c^T x\}$ \\
+with constraints $\{e_{ij}=1 \Rightarrow x_i + x_j \ge 1\}$\\
+$x \in \{0,1\}^n$
+
+Both the cost-function and constraints are linear and the domain is integer wich gives us a integer linear program.\\
+Since $\tilde{E}$ is of size $O(n^2)$ the number of constraints is $O(n^2)$ thus polynomial number of linear constraints.
+
+\end{solution}
+%\clearpage
+%-----------------------
+\begin{exercise}
+{\bf
+Give an example of Euclidian TSP where the nearest neighbor heuristic fails
+to find the optimal solution.
+}
+\end{exercise}
+\begin{solution}
+
+The nearest neighbor is a greedy algorithm and will sometimes
+choose to walk to a city that would have been better to walk
+to in a later stage, giving a shorter total walk.
+\\
+This simple example that gets the essence of the problem
+of the greedy approach of the algorithm, here starting at city $A$
+\footnote{Doesn't matter if we went to $D$ instead of $C$ from $B$ by symmetri-reason, just relabel $C \leftrightarrow D$}: 
+
+\[\begin{matrix}
+    \begin{tikzpicture}[>=stealth,->,shorten >=2pt,looseness=.5,auto]
+        \node at (0,0) (A) {$A_{(0,0)}$};
+        \node at (4,0) (B) {$B_{(4,0)}$};
+        \node at (4,3) (C) {$C_{(4,3)}$};
+        \node at (4,-3) (D) {$D_{(4,-3)}$};
+
+        \draw (A) -- (B) node [midway] {4};
+        \draw (B) -- (C) node [midway] {3};
+        \draw (C) to[bend left] (D) node [midway] {6}; 
+        \draw (D) -- (A) node [midway] {5};
+    \end{tikzpicture}
+    &
+    \begin{tikzpicture}[>=stealth,->,shorten >=2pt,looseness=.5,auto]
+        \node at (0,0) (A) {$A_{(0,0)}$};
+        \node at (4,0) (B) {$B_{(4,0)}$};
+        \node at (4,3) (C) {$C_{(4,3)}$};
+        \node at (4,-3) (D) {$D_{(4,-3)}$};
+
+        \draw (A) -- (C) node [midway] {5};
+        \draw (C) -- (B) node [midway] {3};
+        \draw (B) -- (D) node [midway] {3}; 
+        \draw (D) -- (A) node [midway] {5};
+    \end{tikzpicture}
+    \\
+    (NN)
+    &
+    (Better)
+    \\
+\end{matrix}\]
+
+
+(NN): $\Sigma=18$ \\
+(Better): $\Sigma=16$ \\
+
+(NN) solution > (Better) solution \\
+Showing that this example of Euclidian TSP
+when starting at city $A$ has a non optimal solution since $\exists$ a better solution. $\qed$
+
+\end{solution}
+%\clearpage
+%-----------------------
+\begin{exercise}
+{\bf
+Generalize the result for nearest neighbor (NN) as follows.
+Find a constant $K > 1$ and an increasing function $f(n)$ such that,
+for each $n$ there is a Euclidian TSP instance with $f(n)$ cities for which NN,
+starting in city $1$ will yield a solution that is at least $K$ times larger
+than the optimum solution.
+You get $2$ bonus points if $K$ is such that Christofides' algorithm is guaranteed
+to do better on these instances.
+}
+\end{exercise}
+\begin{solution}
+Choosing $A$ as city ``1'' and constructing the TSP instances as below with $f(n)=\underline{2n+2}$ cities. We assume that $n>0$.
+
+\[\begin{matrix}
+    \begin{tikzpicture}[>=stealth,->,shorten >=1pt,looseness=.5,auto]
+        \node at (-16/3,0) (A) {$A$};
+        \node at (0,0) (B) {$B$};
+        
+        \node at (0,1) (C1) {$C^1$};
+        \node at (0,2) (C2) {$C^2$};
+        %...
+        \node at (0,4) (C4) {$C^n$};
+
+        \node at (0,-1) (D1) {$D^1$};
+        \node at (0,-2) (D2) {$D^2$};
+        %...
+        \node at (0,-4) (D4) {$D^n$};
+
+
+        \draw (A) -- (B) node [midway] {4n};
+        
+        \draw (B) -- (C1) node [midway] {3};
+        \draw (C1) -- (C2) node [midway] {3};
+        \draw[dashed] (C2) -- (C4) node [midway] {3(n-2)};
+
+        \draw (C4) to[bend left] (D1) node [midway] {3(n+1)};
+
+        \draw (D1) -- (D2) node [midway] {3};
+        \draw[dashed] (D2) -- (D4) node [midway] {3(n-2)};
+
+        \draw (D4) -- (A) node [midway] { $5n$ };
+
+    \end{tikzpicture}
+    &
+    \begin{tikzpicture}[>=stealth,->,shorten >=1pt,looseness=.5,auto]
+        \node at (-16/3,0) (A) {$A$};
+        \node at (0,0) (B) {$B$};
+        
+        \node at (0,1) (C1) {$C^1$};
+        \node at (0,2) (C2) {$C^2$};
+        %...
+        \node at (0,4) (C4) {$C^n$};
+
+        \node at (0,-1) (D1) {$D^1$};
+        \node at (0,-2) (D2) {$D^2$};
+        %...
+        \node at (0,-4) (D4) {$D^n$};
+
+
+        \draw (A) -- (C4) node [midway] {5n};
+        \draw[dashed] (C4) -- (C2) node [midway] {3(n-2)};
+        \draw (C2) -- (C1) node [midway] {3};
+        \draw (C1) -- (B) node [midway] {3};
+        \draw (B) -- (D1) node [midway] {3};
+        \draw (D1) -- (D2) node [midway] {3};
+        \draw[dashed] (D2) -- (D4) node [midway] {3(n-2)};
+        \draw (D4) -- (A) node [midway] { $5n$ };
+
+    \end{tikzpicture}
+
+    \\
+    (NN)
+    &
+    (Better)
+    \\
+\end{matrix}\]
+
+(NN): $\Sigma=4n+3n+3(n+1)+3(n-1)+5n=18n$\\
+(Better): $\Sigma=5n+3n+3n+5n=16n$
+
+(NN) $= K \cdot$ (Better) $\le$ K $\cdot$ (OPT)
+$K=\frac{(NN)}{(Better)}=\frac{18n}{16n}=\underline{\frac{9}{8}}>1$
+
+$B$ is always the closest city from $A$ \footnote{Doesn't matter if we went to $D^1$ instead of $C^1$ from $B$ by symmetri-reason just relabel $C^i \leftrightarrow D^i$}
+The walk will always be $K=\frac{9}{8}$ worse then a better solution and therefore it is at least $\frac{9}{8}$ times worse then the optimal solution.
+
+%Christofides' algorithm on the TSP instances: \\
+
+\end{solution}
+%\clearpage
+
+\end{document}

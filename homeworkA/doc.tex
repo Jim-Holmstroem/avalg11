@@ -1,0 +1,221 @@
+%\documentclass[a4paper]{article}
+\documentclass[a4paper,twoside=false,abstract=false,numbers=noenddot,
+titlepage=false,headings=small,parskip=half,version=last]{scrartcl}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{multirow}
+\usepackage{verbatim}
+\usepackage[colorlinks=true,pdfstartview=FitV,linkcolor=black, citecolor=black,urlcolor=blue]{hyperref}
+\usepackage[T1]{fontenc}	      
+\usepackage[swedish]{babel}
+\usepackage[utf8]{inputenc}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\author{Jim Holmström F-08 890503-7571}
+\title{Homework A}
+\subtitle{DD2440 Advanced Algorithms}
+
+\begin{document}
+\maketitle
+
+\section{Problem 1}
+
+\begin{equation} \label{eq:gcddomain}
+    \text{Given: }    a,b \ge 0 \wedge \neg(a=b=0)
+\end{equation}
+
+\begin{equation} \label{eq:gcddefinition}
+   \text{Definition of gcd: } \gcd(a,b)=c \iff \argmax_c \{c|a \wedge c|b\}
+\end{equation}
+
+\subsection{Validate}
+
+In order from the top.
+
+\begin{equation} \label{eq:statement1}
+    \verb+if (b > a) return gcd(b, a)+
+\end{equation}
+Sorts the arguments resulting in $: a \ge b$ and trivially holds from (\ref{eq:gcddefinition}) with $a \leftrightarrow b$ and using the commutative property of ``$\wedge$''
+
+\begin{equation} \label{eq:statement2}
+    \verb+else if (b == 0) return a+
+\end{equation}
+Acts as base case. $i \neq 0$ from (\ref{eq:gcddomain}) $\gcd(i,0)=i$ since $c=i$ is the largest $c : (c|i \wedge c|0)$
+
+\begin{equation} \label{eq:statement3}
+    \verb+else if (a and b are even) return 2*gcd(a/2, b/2)+ 
+\end{equation}
+Since both a and b are even both must have at least the factor 2 in common.
+More generally:
+\begin{equation}
+    \gcd(pm,pn)=p\cdot \gcd(m,n)
+\end{equation}
+In our case $a=2m$ and $b=2n$
+
+\begin{equation} \label{eq:statement4}
+    \verb+else if (a is even) return gcd(a/2, b)+
+\end{equation}
+Since we now that we have passed the above statement we have that $b$ is odd thus $2$ cannot be a factor, and we can thus remove the factor $2$ from $a$ without influencing the result.
+
+\begin{equation} \label{eq:statement5}
+    \verb+else if (b is even) return gcd(a, b/2)+
+\end{equation}
+The same way as above but $a \leftrightarrow b$
+
+\begin{equation} \label{eq:statement6}
+    \verb+else return gcd(b,a-b)+
+\end{equation}
+(\ref{eq:statement1}) $\Rightarrow a-b \ge 0$ and (\ref{eq:statement2}) $\Rightarrow b \neq 0$ and thus the parameters will at least be within the domain. \\
+
+$
+    \gcd(b,a-b)=\argmax_c \{b|c \wedge (a-b)|c\}=\\
+    \{ (a-\underbrace{b}_{c|b})|c \Rightarrow
+    \{ \text{$a$ must have a factor $c$}, c|c(a/c+b/c) \} \Rightarrow
+    c|a \}\\
+    =\argmax_x \{a|c \wedge b|c\}=\gcd(a,b)
+$
+and thus the statement holds. \\
+
+All the recursive calls holds, has arguments within the domain, the argumentsum is strictly smaller for all calls 
+(except (\ref{eq:statement1}) but it can only be called once in a row) 
+$\Rightarrow$ will always land in the basecase (\ref{eq:statement2}) and return the correct $\gcd$. $\qed$
+
+\subsection{Number of recursive calls}
+
+In (\ref{eq:statement6}) $a,b \in Odd$ so the gcd will be called with $b \in Odd$ and $a-b \in Even$.
+%Excluding (\ref{eq:statement1}),(\ref{eq:statement2}) and wich of (\ref{eq:statement4}) or (\ref{eq:statement} is called since it irrelevant for the number of calls. 
+We now know from above that there can only be a constant number of calls to the statments ``not dividing by 2'' before ``dividing by 2'' is called $\Rightarrow$ number of calls $O(log(a)+log(b))=O(log(ab)$
+
+%gcd(b,a-b*(a/b)) simple wurst case will then be a/b
+%in (b,(a-b)): (oe: a=odd,b=even)
+%    oo: (o,o-o)=>(o,e) ONLY CASE!
+%    { can't occure!! 
+%       oe: (e,o-e)=>(e,o) (already taken care of by b-even-statement)
+%       eo: (o,e-o)=>(e,o) (already taken care of by a-even-statement)
+%       ee: (e,e-e)=>(e,e) (already taken care of by both-even-statement)
+%    }
+
+\subsection{Bit complexity}
+
+$n=max(n_a,n_b)$ where $n_a,n_b$ is the number of bits in $a,b$
+
+Assuming the number is represented in the base 2, since we are asked for bit complexity.
+Operation-cost:\\
+$2a$ and $a/2$ is $O(n_a)$ ``*'' and ``/'' with it's base you can just move all digits (bits in this case) one step in the representation (you ``shift'' the digits).\\ 
+$a>b,a-b$ trivially is $O(n)$
+
+The number of recursive calls on the number of bits: $O(log(ab))=O(log(2^{n_a+n_b})=O(n_a+n_b))$
+
+Total-bitcomplexity $= \sum{\#{calls_i}*{operationcost_i}} = O(n_a+n_b)*O(n) = \underline{O((n_a+n_b)max(n_a,n_b))}$
+
+\section{Problem 2}
+\begin{equation*}
+    N=8905037571, \\
+    a_{1}=123456789, \\
+    a_{2}=987654321
+\end{equation*}
+
+
+Simple relations used throughout this problem: 
+\begin{equation} \label{eq:gcdplusone}
+    c \ge 0 \Rightarrow  \gcd(c+1,c)=1
+\end{equation}
+
+\begin{equation} \label{eq:remaindertheo}
+    Chinese\ Remainder\ Theorem
+\end{equation}
+
+\begin{equation} \label{eq:modrule}
+    c\cdot d+a \equiv a\ (mod\ d) 
+\end{equation}
+
+\begin{equation} \label{eq:congruenceproblem}
+    \text{Find a positive } x < N(N+1) : 
+    \begin{cases}
+        x \equiv a_{1}\ (mod\ N)\\
+        x \equiv a_{2}\ (mod\ N+1)
+    \end{cases}
+\end{equation}
+
+Put $x$ as a smart linear combination of $a_{1:2}$. 
+$x=a_{1}b_{1}(N+1)+a_{2}b_{2}N$
+
+(\ref{eq:remaindertheo}) $\Rightarrow$
+
+\begin{equation} \label{eq:bigstep}
+    \begin{cases}
+        x \equiv a_{1}b_{1}(N+1)+a_{2}b_{2}N\ \equiv \{(\ref{eq:modrule})\} \equiv a_{1}b_{1}(N+1)\ (mod\ N)\\
+        x \equiv a_{1}b_{1}(N+1)+a_{2}b_{2}N\ \equiv \{(\ref{eq:modrule})\} \equiv a_{2}b_{2}N\ (mod\ N+1)
+    \end{cases}
+\end{equation}
+
+(\ref{eq:congruenceproblem}) and (\ref{eq:bigstep}) gives:
+
+\begin{equation} \label{eq:congruencecombination}
+    \begin{cases}
+        a_{1}b_{1}(N+1) \equiv a_{1}\ (mod\ N)\\
+        a_{2}b_{2}N \equiv a_{2}\ (mod\ N+1)
+    \end{cases}
+    \Rightarrow
+    \begin{cases}
+        b_{1}(N+1) \equiv 1\ (mod\ N)\\
+        b_{2}N \equiv 1\ (mod\ N+1)
+    \end{cases}
+\ %ugly fix for some bug
+\end{equation}
+
+$x$ satisfies (\ref{eq:congruenceproblem}) if $b_{1:2}$ satisfies (\ref{eq:congruencecombination})
+\begin{equation*}
+    b_{1}(N+1) \equiv b_{1}N+b_{1} \equiv \{(\ref{eq:modrule})\} \equiv b_{1} \equiv 1\ (mod\ N) 
+\end{equation*}
+\begin{equation*}
+    b_{2}N \equiv b_{2}(N+1)-b_{2} \equiv \{(\ref{eq:modrule})\} \equiv -b_{2} \equiv 1\ (mod\ N+1)
+    \Rightarrow
+    b_{2} \equiv 1\cdot (-1) \equiv N\ (mod\ N+1)
+\end{equation*}
+
+\begin{equation*}
+    \begin{split}
+        \therefore x & \equiv a_{1}(N+1)+a_{2}N^{2} \equiv \{\text{(using pythons native big-integer support)}\} \equiv \\
+        & \equiv \underline{71603982658724599629}\ (mod\ N(N+1))
+    \end{split}
+\end{equation*}
+
+The $x$ found solves (\ref{eq:congruenceproblem}) and $x<N(N+1) \qed$
+
+\section{Problem 3}
+
+An element is denote by $m$. With unitcost RAM you can't allocate to much RAM (memory allocated $\le 2^w=n$) making so for example straight up bucketsort will not do it.
+
+Intending to use radix sort using $\lceil{log_2(n+1)}\rceil$ at a time.
+We know that since $m=O(n^{10})$ $m$ will have $O(10*log(n))$ number of bits.
+Sorting with $\lceil{log_2(n+1)}\rceil$ at a time the largest number occuring is $O(n)$ and we can do this sorting step by bucket-sort (assuming you have enough space to allocate, else you just lower the sorting size by a constant, the following arguments will still hold) in $O(n)$ and repeat this $10$ times.
+The resuling sort will take $O(10n)$ and since 10 is a constant we get $O(n)$ $\qed$
+
+\section{Problem 4}
+
+Use a balanced search tree (ex. red-black tree) where each node consists of a tuple of the value $i$ and a bucket $b_i$ consisting of an arraylist.
+The tree will have $m$ nodes.\\
+Put all elements the their corresponding bucket $b_i$ in the balanced tree, each put is $O(log(m))$ (arraylist insert is $O(1)$) and you do this foreach element $O(n)$ gives us $O(nlog(m))$ for this.
+Stitch the buckets $b_i$ together in order by repeatly taking the minimum $i$-bucket from the balanced search tree $O(log(m))$ since you do this $m$ times this will take $O(mlog(m))$\\
+Since the number of unique elements can't exceed to number elements we have $m \le n$ giving us $O(mlog(m)) \le O(nlogm)$
+
+Resulting complexity will be $O(nlog(m))$ $\qed$
+
+\section{Problem 5}
+
+Resolution Rule: $\frac{C \vee x \ \ \ \ \ \ D \vee \neg x}{C \vee D}$ where $C,D \in \bigvee{c_{i}}$ in our case $i=1$ because of the \verb+2-CNF+ criteria. \\
+This is need so that $C \vee D$ $\in$ \verb+2-CNF+ that is; closed under resolution. (Note. this doesn't hold for \verb+3-CNF+ or higher making that problem much harder)
+The main idea in the proof is that taking all valid combinations of the $2n$ variables in the start expression will result in maximally $(2n)^2=O(n^2)$ number of valid resoluted new clauses 
+and since these are all possible \verb+2-CNF+ from this statement can't be further resoluted (not without resulting in duplications since they are already represented).
+Foreach resolution you check for the resolution clause to return either $()$ or $(x \vee x)$ (where $x$ can be negated variable). 
+$()$ will result in \verb+false+ termination and $(x \vee x)$-clause is resulting in ``$x==1$'' for the orignal statement to hold. 
+Each resolution and resolution check will take $O(1)$ but for safety reason one can say that it's polynomal and still fullfill the criterias as a solution for this assignment.
+The same goes for the container of clauses, answer etc, as long as you go with a structure which has polynomal access time.
+
+All the operators are of polynomal order and since polynoms are closed under both addition and multiplication ($n^{2}Poly(n)=Poly(n)$) we have a resulting polynomal running time $\qed$
+
+\end{document}
