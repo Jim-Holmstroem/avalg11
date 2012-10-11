@@ -1,5 +1,5 @@
 function [] = factorizer(filename,start,goal)
-    file = fopen(strcat('data/',filename),'w')
+    file = fopen(strcat('testdata/',filename),'w')
 
     for it=start:goal,
         number = sym(int2str(it))
