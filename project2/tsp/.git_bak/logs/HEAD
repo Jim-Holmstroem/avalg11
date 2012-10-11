@@ -1,0 +1,14 @@
+0000000000000000000000000000000000000000 df6023ec868ba993adf2fd627b4926d834efc408 Jim Holmström <jim.holmstroem@gmail.com> 1322671072 +0100	commit (initial): Added plotter.m to plot in/output and added 2 testfiles
+df6023ec868ba993adf2fd627b4926d834efc408 480d3fa5840c349c47d36f22acf8bc2dd01731df Jim Holmström <jim.holmstroem@gmail.com> 1322671081 +0100	pull : Merge made by recursive.
+480d3fa5840c349c47d36f22acf8bc2dd01731df 46a2bb75ed219641b347785701afe35ecece6390 Jim Holmström <jim.holmstroem@gmail.com> 1322671276 +0100	commit: Added plotter and 2 testfiles
+46a2bb75ed219641b347785701afe35ecece6390 d3e5b1440e9ca1658dd0c214df03bedc48b89774 Jim Holmström <jim.holmstroem@gmail.com> 1322671382 +0100	commit: removed redudant files
+d3e5b1440e9ca1658dd0c214df03bedc48b89774 55ff591b8fafc45af7756f5d4771be6c3781679f Jim Holmström <jim.holmstroem@gmail.com> 1322674184 +0100	commit: Added testgenerator
+55ff591b8fafc45af7756f5d4771be6c3781679f 464cee56fdb28abba4cd93fffb218ca4bd312851 Jim Holmström <jim.holmstroem@gmail.com> 1322674193 +0100	pull : Merge made by recursive.
+464cee56fdb28abba4cd93fffb218ca4bd312851 290195f89e0d8049aac74164fb0f8782c55f1918 Jim Holmström <jim.holmstroem@gmail.com> 1322692128 +0100	pull : Fast-forward
+290195f89e0d8049aac74164fb0f8782c55f1918 4da36534090d0e489d0799b37a4f60aa9abc6201 Jim Holmström <jim.holmstroem@gmail.com> 1322694209 +0100	commit: Fixed bugs in two_opt and testcase for two-opt
+4da36534090d0e489d0799b37a4f60aa9abc6201 bdf38658c15a14ab138b9166c785e287cf515dda Jim Holmström <jim.holmstroem@gmail.com> 1322722461 +0100	commit: Bugfix: reseted counter in 2-OPT
+bdf38658c15a14ab138b9166c785e287cf515dda 12d26f2c6cfda71b4e3f7357765c9e1b562b09e3 Jim Holmström <jim.holmstroem@gmail.com> 1322725326 +0100	commit: trying to fix 2-OPT now i think it does the right thing but it just continous to swap nothing
+12d26f2c6cfda71b4e3f7357765c9e1b562b09e3 0e72f9c2ffe880d358a8c6d86274ee632bfdd13f Jim Holmström <jim.holmstroem@gmail.com> 1322905483 +0100	pull : Fast-forward
+0e72f9c2ffe880d358a8c6d86274ee632bfdd13f 5aae86eedbfba4f3f39ca28e26a0b58339681844 Jim Holmström <jim.holmstroem@gmail.com> 1322919911 +0100	commit: Added a swaplist and test for it appears to work under some presumtions.
+5aae86eedbfba4f3f39ca28e26a0b58339681844 130efb5e0b4a3024c67d5394343081b300cfc5ee Jim Holmström <jim.holmstroem@gmail.com> 1322955954 +0100	commit: 2-OPT works locally but segfaults on kattis.
+130efb5e0b4a3024c67d5394343081b300cfc5ee d0d74f5e428e760ae8e0996de0c9b7752be2a29b Jim Holmström <jim.holmstroem@gmail.com> 1322956102 +0100	commit: just missed to add main.cpp

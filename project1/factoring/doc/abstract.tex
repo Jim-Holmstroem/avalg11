@@ -1,0 +1,11 @@
+This report desribes the implementation of an algorithm that factors integers 
+into prime factors. Factoring an integer into prime factors means finding a
+representation of an integer $n = p_1^{k_1}p_2^{k_2} \ldots p_n^{k_n}$ where
+$p_i$ are primes and $k_i$ are integers.
+Three different algorithms were tried (separately and combined): trial
+division, Pollard's $\rho$ algorithm and perfect power factorization. Pollard's
+$\rho$ algorithm was tried with two different cycle detection algorithms.
+The algorithms where then benchmarked using 100 random integers. 
+The report concludes
+that using Pollard's $\rho$ algorithm with Floyd's cycle detection resulted in
+the best performance.

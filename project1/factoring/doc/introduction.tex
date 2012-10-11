@@ -1,0 +1,16 @@
+The factoring project is about factoring integers into prime factors. That is,
+for a given number $n \in \mathbb{Z}$, $n$ can be represented as 
+$n = p_1^{k_1}p_2^{k_2} \ldots p_m^{k_m}$ where $p_i$ are prime numbers and
+$k_i$ are integers. The task of the project is to find these prime numbers
+$p_i$ and their exponents $k_i$. As an example, $20 = 2^2 \cdot 5^1$.
+
+Today, there is no known (non-quantum) algorithm that effectively factors very 
+large integers. 
+In 2010, a group of researches managed to factor a number represented by
+232 bits, but this took 2 years using hundreds of machines~\cite{rsa}.
+
+This report will describe the implementation of an algorithm for factoring
+integers. Section \ref{sec:problem_statement} states the exact problem
+defintion, then section \ref{sec:implementation} describes the various
+algorithms being tried. In section \ref{sec:results}, these algorithms
+are benchmarked and the results are then analyzed in section \ref{sec:analysis}.

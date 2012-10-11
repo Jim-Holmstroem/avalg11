@@ -1,0 +1,19 @@
+As can be seen in tables \ref{table:nn} and \ref{table:nn_and_2-opt}, adding an
+local optimization step to the heuristic creates a much better result and the resulting score for 
+\proc{3-opt} further confirms it, each added permutation type improved the path of.
+
+It is also interesting to note that the score doesn't increase when doubling
+the counter in the last row of table \ref{table:nn_and_2-opt}. This means that
+\proc{2-opt} has encountered a local miminum and won't find a better solution,
+no matter how much more time it gets. One can also see that the number of
+iterations of \proc{2-opt} wasn't the worst case scenario of
+$\Theta(2^{n/2})$, since the running time isn't more than 0.38 seconds. This
+further justifies the claim of \cite{hastad} that the number of iterations in
+practice are $O(n)$.
+
+As for the \proc{3-opt} it, for most instances, didn't have time to fully complete 
+and was prematuraly forced to return and would perform much better if given enough time. 
+Since it rarely reached a complete run it's hard to tell if the number of re-runs was $O(n)$ or the worstcase exponential runningtime.
+
+Adding the second permutation gave almost twice as large impact on the score as just adding the first one even though it had a higher running-complexity,
+this is probably due to a simpler (discarding the reversal) permutation has a higher probability of occurence.

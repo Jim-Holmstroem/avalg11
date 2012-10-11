@@ -1,0 +1,23 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}
+\BOOKMARK [1][-]{section.2}{Problem statement}{}
+\BOOKMARK [1][-]{section.3}{Implementation}{}
+\BOOKMARK [2][-]{subsection.3.1}{Algorithms}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Primality testing}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.2}{General algorithm}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Trial division}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.4}{Pollard's \040algorithm}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.5}{Perfect power factorization}{subsection.3.1}
+\BOOKMARK [2][-]{subsection.3.2}{Implementation of algorithms}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Handling failure}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Implementing primality testing}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Implementing trial division}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.4}{Implementing Pollard's \040algorithm}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.5}{Implementing perfect power factorization}{subsection.3.2}
+\BOOKMARK [1][-]{section.4}{Results}{}
+\BOOKMARK [2][-]{subsection.4.1}{Benchmark}{section.4}
+\BOOKMARK [2][-]{subsection.4.2}{Test system}{section.4}
+\BOOKMARK [2][-]{subsection.4.3}{Test results}{section.4}
+\BOOKMARK [2][-]{subsection.4.4}{Kattis submission}{section.4}
+\BOOKMARK [1][-]{section.5}{Analysis}{}
+\BOOKMARK [1][-]{section.6}{Conclusion}{}
+\BOOKMARK [1][-]{appendix.A}{Appendix A}{}

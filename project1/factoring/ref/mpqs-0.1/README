@@ -1,0 +1,97 @@
+This is an implementation of the Multiple Polynomial Quadratic Sieve.
+The sieving part was originally written by Scott Contini, using the "lip"
+package for multiple-precision arithmetic, and translated to GMP.
+
+##############################################################################
+
+Installation.
+
+0) you need first to install GMP (http://www.swox.se/gmp/)
+1) then do:
+
+   make GMP=<gmpdir>
+
+   where <gmpdir> is the directory where you installed GMP.
+
+##############################################################################
+
+Usage.
+
+The package contains 4 subprograms:
+
+- 'sieve' is the siever program
+- 'combine' to combine the partial relations
+- 'buildmatrix' to build the matrix
+- 'gauss' which performs Gaussian elimination and solves dependencies
+
+The number to factor is written in a file, which contain also the factor
+base bound B, for example (with the c60 file shipped within the package):
+
+% cat c60
+213373250047292900922963491789292983262625983360017824143019
+125707
+
+Then you have to perform:
+
+% ./sieve -p c60 -n 2700 # n is the number of wanted full relations
+...
+2702 smooth equations
+35113 semi-smooth equations
+0 partial partials
+
+It writes the full relations to 'c60.fulls', and the partial relations
+to 'c60.partials'.
+
+% ./combine -in c60.partials -out c60.cycles
+input file has 35113 relations
+found 3206 cycles with 2794 large primes
+
+This combines the partial relations from 'c60.partials' into 'c60.cycles',
+and prints on standard error the number of cycles found.
+
+% buildmatrix -fb c60.fbase -f c60.fulls -c c60.cycles > c60.matrix
+factor base has 5928 primes
+3206 cycles
+2794 large primes
+2702 full relations
+5908 total relations
+remains 5908 rels on 5928 primes (excess -20)
+discarded 295 singleton(s)
+remains 5613 rels on 5542 primes (excess 71)
+discarded 48 singleton(s)
+remains 5565 rels on 5494 primes (excess 71)
+discarded 11 singleton(s)
+remains 5554 rels on 5483 primes (excess 71)
+discarded 1 singleton(s)
+remains 5553 rels on 5482 primes (excess 71)
+discarded 0 singleton(s)
+
+This builds the matrix 'c60.matrix' from the full relations and the cycles.
+If the last "remains" line says "remains 0 rels", it means you have not
+enough relations, so you need to sieve again with a larger -n value.
+
+% ./gauss -fb c60.fbase -p c60 -m c60.matrix
+5553 relations
+5483 primes with odd exponent
+...............................................................................
+Found 74 dependencies
+Process dependency 1:
+gcd(X+Y,N)=396355053225342166863724839683
+gcd(X-Y,N)=538338664565940325587701217593
+
+This last program performs the Gaussian elimination, and prints the found
+factors.
+
+##############################################################################
+
+Alternatively, you can simply type:
+
+% make factor C=c60 N=2700
+
+where <c60> is the input file, and <2700> the number of wanted full relations.
+
+Once you found the factors, type:
+
+% make clean C=c60
+
+to remove the generated files (except the input file).

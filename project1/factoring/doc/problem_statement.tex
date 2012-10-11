@@ -1,0 +1,38 @@
+Given 100 unknown integers, compute and print the prime number factorization 
+for each integer. If number $n_i = p_1^{k_1}p_2^{k_2} \ldots p_m^{k_m}$, then
+the program should print the following on \texttt{stdout}.
+\begin{align*}
+&\left.\begin{aligned}
+      &p_1 \\
+      &p_1 \\
+      &\vdots \\
+      &p_1 
+      \end{aligned}
+\right\}
+\qquad k_1 \text{ times} \\
+&\left.\begin{aligned}
+      &p_2 \\
+      &p_2 \\
+      &\vdots \\
+      &p_2 
+      \end{aligned}
+\right\}
+\qquad k_2 \text{ times} \\
+&\vdots \\
+&\left.\begin{aligned}
+      &p_m \\
+      &p_m \\
+      &\vdots \\
+      &p_m 
+      \end{aligned}
+\right\}
+\qquad k_m \text{ times}
+\end{align*}
+
+The time limit for the program is 15 seconds. The text \texttt{fail} must be
+printed on \texttt{stdout} if the program fails to factor a number. 
+The performance of the program is measured in how many numbers the program are
+able to factor within the time limit. The program must print either the correct
+prime factorization or \texttt{fail} for each of the 100 numbers.
+
+The program is \emph{not} allowed to use the \texttt{time} system call.

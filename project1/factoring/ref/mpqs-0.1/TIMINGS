@@ -1,0 +1,89 @@
+These timings were obtained on a 1.7 Ghz Athlon XP, with gcc 3.3.3.
+
+         B        LP       nfulls     factor time  Pari-2.2.7  2.2.10
+                                                   (alpha)     (development)
+c60    125707  16090496     2900         65.5s     2mn5,721ms  1mn31,024ms
+                        2LP:2507
+c70    196499  25151872     3900         567s                  12mn17,787ms
+       196499  10000000     3900         572s
+       196499  50303744     3800         578s
+c80    233969 4294967295    3849        8200s
+       233969  29948032     4150        8093s
+
+On a 3Ghz Pentium 4:
+                                                     Pari-2.2.10
+                                                     (dev. CHANGES-1.1192)
+c60                                                  36,029 ms
+                                                     30,269 ms (GMP)
+c70                                                  4mn, 22,624 ms
+                                                     4mn, 13,796 ms (GMP)
+c80                                                  1h, 38mn, 26,437 ms
+                                                     2h, 9mn, 3,251 ms (GMP)
+
+3838 fulls, 241644 partials, est. 29541 cycles (want 6661) at 7965s [exp. 4259s]
+% ./combine -in c80.partials -out c80.cycles
+input file has 241666 relations
+found 6761 cycles with 5947 large primes
+
+Pari uses LP = 80 * B ("optimal")
+
+
+c60:
+factor base bound 125707
+large prime bound 16090496
+sieve threshold is 5602716598595
+using multiplier k = 19
+sieving took 87660ms (factor 19470)
+2501 smooth equations
+30835 semi-smooth equations
+16556 partial partials
+
+16556 partial partials -> 19280
+
+##############################################################################
+
+galois:
+
+c60.magma:
+Magma V2.11-14: Time: 184.680
+mpqs (32 bits): sieving took 251830ms (factor 43180ms), combine 2.7s,
+     buildmatrix 0.6s, gauss 4.5s, total 260s
+mpqs (64 bits): sieving took 207.5s (factor 33.2s), combine 2.8s,
+     buildmatrix 0.6s, gauss 3.7s, total 214.6s
+     B=63689,T=2.0,fulls=1210:sieving took 156.8s (factor 3.3s) [gcc4]
+             T=1.8,fulls=1280:sieving took 150.7s (factor 0.5s)
+             T=1.6,fulls=1330:sieving took 145.2s (factor 0.0s)
+             T=1.4,fulls=1400:sieving took 143.7s (factor 0.0s) (***)
+	     T=1.2,fulls=1560:sieving took 155.3s (factor 0.0s)
+     T=1.6,B=95533,2300fulls:205.5s (662 excess)
+     gcc4: sieving took 208.3s (factor 34.4s)
+     (fang: 33.6s (factor 8.6s))
+
+(strange bug on Linux: buildmatrix finds 3047 rels on 3037 primes
+	 instead on 3048 rels on 3038 primes when one adds a 'print')
+
+c70.magma:
+Magma V2.11-14: Time: 1315.010 (1505 fulls and 5018 cycles)
+mpqs (64 bits,gcc4):
+      B=139309,T=2.0,fulls=1850:sieving took 1690.1s (factor ???s)
+               1850 ffs, 97268 fps, 19880 pps, 2344 fps cycles, 2273 pps cycles
+               T=2.2,fulls=1540:sieving took 1643.3s (factor ???s)
+               1540 ffs, 81898 fps, 51677 pps, 1657 fps cycles, 3346 pps cycles
+               T=2.4,fulls=1260:sieving took 2113.4s (factor ???s)
+               1260 ffs,69241 fps, 149135 pps, 1169 fps cycles, 4109 pps cycles
+      fang: 456.3s (1215 fulls)
+
+c80.magma:
+galois:~/mpqs> nice ./sieve -p c80.magma -n 2780
+...
+time=17021.8s: 2779 ffs, 112271 fps, 439059 pps, est. 6113 cycles (14577 wanted)
+sieving took 17022.5s (factor 2581.6s)
+2780 smooth equations
+112281 semi-smooth equations
+439076 partial partials
+
+Magma V2.11-14:
+3196 fulls and 11421 cycles are enough
+MPQS time: 10673.430
+(fang: MPQS time: 2689.260)
+

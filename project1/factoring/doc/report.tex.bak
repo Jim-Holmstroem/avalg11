@@ -1,0 +1,68 @@
+\documentclass[11pt,oneside]{article}
+
+\usepackage{pseudocode}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\hypersetup{
+  pdfborder = {0 0 0}
+  pdfauthor = {Erik Helin, Jim Holmstr\"{o}m},
+  pdfkeywords = {avalg11, factoring},
+  pdftitle = {Project factoring report},
+  pdfsubject = {Project factoring report},
+  pdfpagemode = UseNone
+}
+\usepackage{listings}
+\lstset{language=C, 
+        showstringspaces=false, 
+        basicstyle=\footnotesize \ttfamily,
+        keywordstyle=\bfseries}
+
+\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+\begin{document}
+\title{Report for project factoring, DD2440}
+\author{Erik Helin \\ \email{ehelin@kth.se} \and Jim Holmstr\"{o}m \\ \email{jimh@kth.se}}
+\maketitle
+
+\begin{abstract}
+    \input{abstract}
+\end{abstract}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+\label{sec:introduction}
+\input{introduction}
+
+\section{Problem statement}
+\label{sec:problem_statement}
+\input{problem_statement}
+
+\section{Implementation}
+\label{sec:implementation}
+\input{implementation}
+
+\section{Results}
+\label{sec:results}
+\input{results}
+
+\section{Analysis}
+\label{sec:analysis}
+\input{analysis}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{conclusion}
+
+\begin{thebibliography}{9}
+    \input{bibliography}
+\end{thebibliography}
+
+\end{document}

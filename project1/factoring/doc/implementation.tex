@@ -1,0 +1,230 @@
+For the implementation of the program, several algorithms have been implemented
+(and combined in various ways). First, the algorithms will be described, then
+the implementations of the algorithms will discussed.
+
+\subsection{Algorithms}
+\label{sec:algorithms}
+
+\subsubsection{Primality testing}
+The input can contains prime numbers, and for these number, no factors can be
+found since they are prime. Therefore, before the input is factored, the input
+needs to be tested to see if it is prime. 
+This was done by using the Miller-Rabin
+algorithm~\cite{wiki:miller-rabin}.
+
+\subsubsection{General algorithm}
+The task of factoring a given number $n$ can be split into three tasks:
+\begin{itemize}
+    \item Find a factor $m$ of $n$
+    \item Find the exponent $k$ of factor $m$
+    \item Print the number $m$ $k$ times
+\end{itemize}
+Therefore, the task of finding a prime factor $m$ of $n$ can be implemented in a
+subroutine \emph{find-prime-factor}, resulting in algorithm \ref{alg:generic}.
+
+\begin{pseudocode}{factor}{n}
+\label{alg:generic}
+\COMMENT{General algorithm for factoring a number $n$} \\
+    \WHILE n \neq 1 \DO
+        \BEGIN
+            m \GETS \textit{find-prime-factor}(n) \\
+            k \GETS 1 \\
+            \WHILE m \mid n \DO
+                \BEGIN
+                    k \GETS k + 1 \\
+                    n \GETS $m / n$
+                \END \\
+            \FOR i \GETS 0 \TO k \DO 
+                \textit{print}(m)
+        \END \\
+\end{pseudocode}
+
+\subsubsection{Trial division}
+\label{sec:trial-division}
+If an integer $n$ is composite (not prime), then $n$ must have a factor less
+than or equal to $\sqrt n$, since $\sqrt n \cdot \sqrt n = n$. Therefore, a
+naive algorithm for finding a prime factor to $n$ is to try all primes
+less than or equal to $\sqrt n$ and check if any of them divides $n$. This
+yields algorithm \ref{alg:naive}.
+
+\begin{pseudocode}{trial-division}{n}
+\label{alg:naive}
+\FOR i \GETS 2 \TO \sqrt n \DO
+    \BEGIN
+        \IF i \mid n \THEN \RETURN i \\
+        i \GETS \textit{next-prime}(i)
+    \END
+\end{pseudocode}
+
+\subsubsection{Pollard's $\rho$ algorithm}
+\label{sec:pollard-rho}
+In 1975, Jonh Pollard invented an algorithm that today is referred to as
+Pollard's $\rho$ algorithm~\cite{wiki:pollard}. Pollard's $\rho$ algorithm
+tries to find two numbers $x$ and $y$ such that $x \nmid n$ and $y \nmid n$, 
+but $(x - y) \mid n$. Since $n$ is composite, $n = pq$ for some $p$,
+$q$ where $gcd(p,q) = 1$.  By the Chinese Remainder Theorem~\cite{wiki:crt}, 
+$x \bmod n$ can be
+represented by the pair $(x \bmod p, x \bmod q)$. When $x \equiv y \bmod p$,
+then
+$p \mid (x - y)$ and since $p \mid n$, $(x - y) \mid n$ and the only factor 
+$(x - y)$ and $n$ can share is $p$. Hence, $p = gcd(x-y, n)$. 
+Therefore, when two
+numbers $x$ and $y$ are found such that $gcd(x - y, n) \neq 1$, a factor $p$
+is found. Therefore, Pollard's $\rho$ algorithm needs to generate numbers such
+that $x \not \equiv y \bmod n$ and $x \equiv y \bmod p$.
+
+Iterating a polynomial formula $f(x) = x^2 + c \; (\bmod \; n)$ will yield 
+numbers that might turn into a cycle, that is, the returned values will be
+repeated. The possibility that $g(x) = x^2  + c \; (\bmod \; p)$ 
+will turn into a
+cycle is higher, since $p < n$. Therefore, by repeatedly applying $f(x)$ to
+some start value $x_0$, two numbers $x$ and $y$ such that 
+$x = y \; (\bmod \; p)$ will be 
+found if the function $f(x)$ enters a cycle. Then, since $p \leq \sqrt n$,
+there is a high probability that $x \not \equiv \bmod
+n$.
+The following two paragraphs describes two different ways for
+finding such a cycle.
+
+\paragraph{Floyd's cycle detection}
+Floyd's cycle detection is based on the idea of using two values $x$ and $y$
+and for then repeatedly performing $x = f(x)$ and $y = f(f(y))$, that is, $y$
+will ''move'' twice as fast. If a cycle is found, then $y$ will enter the cycle
+and then ''catch up'' with $x$ when $x$ enters the cycle. 
+However, there is a change that $x = y = n$, and in this case, the algorithm
+fails.
+
+Using Floyd's cycle
+detection results in algorithm \ref{alg:floyd}.
+
+\begin{pseudocode}{pollard-floyd}{n}
+\label{alg:floyd}
+d \GETS 1 \\
+\WHILE d = 1 \DO
+    \BEGIN
+        x \GETS f(x) \\
+        y \GETS f(f(y)) \\
+        d \GETS gcd(|y-x|, n)
+    \END \\
+\IF d = n \THEN \RETURN fail \ELSE \RETURN d
+\end{pseudocode}
+
+\paragraph{Brent's cycle detection}
+Brent's cycle detection is similar to Floyd's, but differ in how often $y$ is
+updated. Instead of updating $y$ at every iteration, $y$ is updated whenever
+the number of iterations is a power of 2.
+
+Using Brent's cycle detection results in algorithm \ref{alg:brent}.
+
+\begin{pseudocode}{pollard-brent}{n}
+\label{alg:brent}
+d \GETS 1 \\
+c \GETS 0 \\
+\WHILE d = 1 \DO
+    \BEGIN
+        x \GETS f(x) \\
+        \IF c \equiv 0 \bmod 2 \THEN
+            y = x \\
+        d \GETS gcd(|y-x|, n) \\
+        c \GETS c + 1
+    \END \\
+\IF d = n \THEN \RETURN fail \ELSE \RETURN d
+\end{pseudocode}
+
+Note that the Pollard $\rho$ algorithm does \emph{not} find a prime factor of
+$n$, it justs a finds a factor. Therefore, in order to find a prime factor, the
+algorithm can be reapplied to the found factor in a recursive step. This results
+in algorithm \ref{alg:pollard-prime}.
+
+\begin{pseudocode}{pollard-prime}{n}
+\label{alg:pollard-prime}
+d \GETS \textit{pollard}(n) \\
+\WHILE \textit{is-prime}(d) = false \DO
+    d \GETS \textit{pollard}(d) \\
+\RETURN d
+\end{pseudocode}
+
+\subsubsection{Perfect power factorization}
+Some composite numbers are perfect powers, that is, an integer $n = p^k$ for
+some prime $p$ and some integer $k$. Such numbers can be factored by using
+Newtons method~\cite{wiki:newton} by repeatedly trying to take $j$th root of
+$n$ and check if it yields an integer for different integers $j$.
+Since $n$ is a perfect power, $j$ has to be larger than 2.
+$j$ has to be less than $\lceil log_2(n) \rceil$, 
+since $p \geq 2$. This results in algorithm
+\ref{alg:perfect-power}.
+
+\begin{pseudocode}{perfect-power-factorization}{n}
+\label{alg:perfect-power}
+j_{max} \GETS \lceil log_2(n) \rceil \\
+\FOR j \GETS j_{max} \TO 2 \DO
+\BEGIN
+    r \GETS \textit{newton}(n,j) \\
+    \IF r \in \mathbb{Z} \THEN
+        \RETURN r
+\END
+\end{pseudocode}
+
+\subsection{Implementation of algorithms}
+\label{sec:implementation-of-algorithms}
+All algorithms were implemented in the C programming language using the
+GMP~\cite{gmp}
+library for all arithmetic operations involving large integers.
+
+The different parts of the implementation will be discussed in
+the following sections. 
+
+\subsubsection{Handling failure}
+\label{sec:handling-failure}
+
+Since it might be the case that the program won't be able to factor all the
+given numbers and an answer has to be given for all
+numbers, a way was needed to abort the factorization of a number.
+
+\paragraph{Handling time-outs}
+\label{sec:time-outs}
+
+Since the program isn't allowed to use the \texttt{time} system call, 
+this was implemented by using a cut-off value. Every iteration of the factoring
+algorithm decremented a counter with an initial max value. If the counter
+reached 0, that meant that the number couldn't be factored.
+
+\paragraph{Handling partial factorization}
+Since the program could find some of the factors, but not all of them due to a
+time-out, the factors couldn't be printed directly. Instead, they were stored
+in a pre-allocated array, and if the algorithm succeeded, the contents of the
+array was printed.
+
+\subsubsection{Implementing primality testing}
+The GMP \texttt{mpz\_probab\_prime\_p} is using the Miller-Rabin test to test
+if a given number $n$ is prime or not. \texttt{mpz\_probab\_prime\_p} also
+takes a second parameter \texttt{reps} describing how many times Miller-Rabin
+should be run to increase the accuracy of the test. We used a value of 3.
+
+\subsubsection{Implementing trial division}
+Trial division was implemented by testing a fixed number of primes stored 
+in an array. The array was iterated over in a loop, trying to divide the given
+number $n$ with each prime $p$ in the array.
+
+\subsubsection{Implementing Pollard's $\rho$ algorithm}
+The implementation of Pollard's $\rho$ algorithm followed algorithm
+\ref{alg:floyd} closely. 
+
+The algorithm used the polynomial function $f(x) = x^2 + 2 \; (\bmod n)$ as for
+generating pseudo-random numbers with the initial value of $x$ set to 1.
+
+When implementing the algorithm, the case
+when the algorithm fails due to $x = y = n$  has to be handled. 
+The way this was done was to restart the algorithm,
+but with a different polynomial function $g(x) = x^2 + c \; (\bmod n)$ and a 
+new initial value $i$. The values $i$ and $c$ were chosen randomly when
+restarting.
+
+\subsubsection{Implementing perfect power factorization}
+The implementation of perfect power hashing made use of the GMP function
+\texttt{mpz\_root} for finding the n:th root, even though using this 
+function was probably against the
+rules. The reason for this was to benchmark a solution making use of perfect
+power factorization, and if a performance increase noticed, 
+implement Newton's method
+ourself. The implementation followed algorithm \ref{alg:perfect-power} closely.

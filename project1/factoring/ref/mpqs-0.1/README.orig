@@ -1,0 +1,222 @@
+This is the header from the original siever written by Scott Contini in 1996
+(http://www.crypto-world.com/code/sample_mpqs.c), from which the file sieve.c
+is adapted, together with the agreement from Scott Contini to distribute
+his modified code under GPL.
+
+/*      
+
+	This is a an implementation of the multiple polynomial
+	quadratic sieve (mpqs), written by Scott Contini.  It uses
+	large integer arithmetic routines from Arjen Lenstra's
+	LIP code (files lip.c, lip.h, lip.o).
+
+	The sieving code here has not been highly optimized.
+	The purpose of this code is for comparison with my
+	self initializing quadratic sieve (siqs) implementation.
+	Any significant improvement in the sieving for mpqs can
+	also be applied to siqs.
+
+        It is assumed that the user of this program is familiar
+        with my Master's thesis from the University of Georgia.
+
+	To run this program (on Unix):
+		you must have lip.o and lip.h in your directory
+
+		select values for parameters (explained below)
+		and put them in the code
+
+		compile by doing something like:
+		gcc -O2 lip.o mpqs.c -lm
+		where mpqs.c is the name of this program
+
+		That will create the executable "a.out".
+		Typing a.out will run the program.  The
+		program immediately looks for a "params" file,
+		explained below.
+
+		The program will regularly output updates on
+		its progress until it is complete.  It will also
+		put some files in your directory, some of which
+		are useful for you to factor the number, and the
+		other files useful to the program so that it can
+		restart where it left off if it was interrupted.
+		Every time one wants to factor a new number, they
+		should remove the files left behind from the previous
+		number factored.
+
+	Parameters that you must select and put into the program:
+
+		BLOCK_LENGTH tells what size blocks the sieve array
+		will be broken into.
+
+		NUM_BLOCKS determines the sieve length.  Sieving
+		will be done from -M to +M where
+		M = BLOCK_LENGTH * NUM_BLOCKS
+
+		B is the upper bound for the largest prime in the
+		factor base.  I used the letter "F" in my paper
+		to represent this value.  Sorry for the discrepency:
+		I'm too lazy to change it.
+
+		there are a few other parameters in the program
+		that you can play with, but it should not be
+		necessary to mess with these to get somewhat
+		efficient factoring.
+
+	The "params" file must contain:
+
+		The number being factored
+
+		A machine number, in case more than one computer
+		will be sieving on the same number.  If only one
+		computer is sieving, then just use machine number
+		equal to 0.
+
+		The number of smooths to get before it should quit
+		sieving.
+
+		The name of the file to put the factor base primes
+		in.
+
+		The name of the file that the smooths should be put
+		in.
+
+		The name of the file that the partials should be put
+		in.
+
+		The name of the file that the partial-partials should
+		be put in.
+
+	Right now, there is no code for getting partial-partials,
+	so that last file will be empty.  Here is a sample params
+	file:
+
+213373250047292900922963491789292983262625983360017824143019
+0
+100
+good.primes
+smooth
+partials
+pps
+
+
+	This means:
+
+		sieve on the number:
+		213373250047292900922963491789292983262625983360017824143019
+		(this is the number we are trying to factor)
+
+		machine number is 0
+
+		stop when 100 or more smooths are obtained
+
+		put the factor base primes in a file called
+		"good.primes"
+
+		put the smooths in a file called "smooth"
+
+		the partials go in the file "partials"
+
+		the partial-partials go in the file "pps"
+
+
+	As mentioned earlier, when the program is running, it
+	outputs updates to its progress.  Assuming that you called
+	the executable file "a.out", it will be outputting the cpu-time
+	from the unix "ps" command.  It will also print "status:"
+	followed by four numbers.  These four numbers are (in order)
+	size of factor base, number of partial-partials obtained,
+	number of partials obtained, and number of smooths obtained.
+	These numbers also appear in the "status" file, where they
+	are updated more frequently.
+
+
+	The smooth file is in the following format:
+ 
+	squareroot p_1 e_1 p_2 e_2 ... p_n e_n 0
+ 
+	where squareroot is a squareroot of a smooth residue, and the p_i and
+	e_i following it is the factorization of the residue.  If p_1 is -1,
+	then the residue is negative.  If p_1 is not -1, then p_1 is the index
+	of the factor base prime which divides the residue.  For example, if
+	p_1 is 1 and if the first prime in the factor base file is 2, then 2
+	divides the residue.  e_1 is the number of times p_1 divides the
+	residue (the exponent of p_1).  The same is true for p_i and e_i, for
+	i = 2 to n.
+ 
+	The partial residue file is of the same format, except that
+	it first contains one large prime which divides the residue.
+
+	Once enough data is generated, you need to combine the data and
+	use some linear algebra techniques to factor the integer.  I do
+	not have linear algebra routines which I am allowed to
+	distribute, so please don't ask me for these.  Thanks...
+
+	Scott Contini
+	(developed while I was graduate student at the University of Georgia)
+
+	Copyright 1996
+*/
+
+##############################################################################
+
+Date: Thu, 31 Mar 2005 20:28:06 -0800 (PST)
+From: Scott Contini <scott_contini@yahoo.com>
+Subject: Re: sample MPQS code
+To: Paul Zimmermann <Paul.Zimmermann@loria.fr>
+In-Reply-To: 6667
+
+--- Paul Zimmermann <Paul.Zimmermann@loria.fr> wrote:
+>        Dear Scott,
+> 
+> I've downloaded your "sample_mpqs.c" file from
+> <http://www.crypto-world.com/code/sample_mpqs.c>,
+> and I'd like to convert it to using GMP instead
+> of LIP for the arithmetic, and also do a few changes.
+> I'd like to redistribute the modified program under GPL,
+> with proper credit to you of course.
+> 
+> Would you agree? The simplest would be that you
+> distribute
+> your sample_mpqs.c code under GPL too.
+> 
+> Regards,
+> Paul
+> 
+
+
+Hi Dr Zimmermann,
+
+I think that is a great idea.  Please feel free to
+modify it as much as you like and distribute it.  I
+would also like to put a copy of your modified code on
+crypto-world, if that is okay with you.
+
+Cheers,
+
+Scott
+
+##############################################################################
+
+Date: Thu, 28 Apr 2005 16:45:59 -0700 (PDT)
+From: Scott Contini <scott_contini@yahoo.com>
+Subject: Re: MPQS
+To: Paul Zimmermann <zimmerma@maths.usyd.edu.au>
+
+--- Paul Zimmermann <zimmerma@maths.usyd.edu.au> wrote:
+>        Scott,
+> 
+> did you write yourself the Lanczos code? If so, do you
+> agree to put it under
+> GPL like your sieving code? Otherwise, we need to ask the
+> author(s).
+> 
+> Regards,
+> Paul
+>
+
+Yes, I wrote the Lanczos code.
+Putting it under GPL should be fine.
+ 
+Scott
+

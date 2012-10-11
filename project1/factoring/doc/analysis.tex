@@ -1,0 +1,42 @@
+The results from table \ref{table:miller-rabin} shows that it is good to use 
+a primality test as an initial test, since one number was prime.
+The running time also shows that is a fast operation.
+
+The results in table \ref{table:trial} then shows that trial division alone 
+does not suffice as an algorihtm for factoring integers. It it also worth
+pointing out that there was no gain in increasing the number of primes used from
+1718 to 10000. This is because the prime factors of most of the number are
+larger than 10000th prime, rendering the trial division test useless.
+
+When comparing the different implementations of Pollard's $\rho$ algorithm, one
+clearly sees that in our case, Floyd's cycle detection method outperforms
+Brent's cycle detection. The reason for this might be that the number used at
+Kattis suits Floyd's cycle detection algorithm better (Brent's algorithm ended
+up with $x = y = n$ more often that Floyd's). Due to this, we decided to use
+Floyd's cycle detection. 
+
+It is also interesting that the combined use of trial
+division, perfect power factorization and Pollard's $\rho$ algorithm shows no
+performance increase compated to using only Pollard's $\rho$ algorithm.
+This is probably due to the fact that the numbers that trial division and
+perfet power factorization can factor can also be quickly factored with
+Pollard's $\rho$ algorithm. When comparing
+Brent's cycle detection with and without all trial division and perfect power
+hashing, the two extra algorithms did help. This further justifies the thought
+that Brent's cycle deteciton is weaker than Floyd's on the number available on
+Kattis. Since there were no performance gains in using trial division and
+perfect power hashing with Floyd's cycle detection, we decided to remove these
+two steps.
+
+Since we didn't gain any increased results from using perfect power hashing, 
+we decicded to not implement Newton's method.
+
+When comparing the different random algorithms used when restarting Pollard's
+$\rho$ algorithm, the reason that \texttt{rand} is faster is probably because
+it is much simpler and doesn't deal with as large number as
+\texttt{mp\_urandomm} does.
+
+It is not surprising that the number of factored number increases as the
+cut-off increases, since this gives the factoring algorithm more time. These
+numbers also shows the importance of tweaking the implementation to be as fast
+as possible, since a fast implementation can use a higher cut-off.

@@ -1,0 +1,8 @@
+*.sty
+*.log
+*.aux
+*.pdf
+*.out
+*.toc
+*.add
+*.spl
