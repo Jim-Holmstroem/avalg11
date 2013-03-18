@@ -1,3 +1,4 @@
 *.o
 test_runner
 tsp
+*.tmp

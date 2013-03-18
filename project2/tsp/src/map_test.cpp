@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "map.h"
+#include "list.h"
 
 TEST(map_test, test_distance)
 {
@@ -10,10 +11,10 @@ TEST(map_test, test_distance)
     g.add_city(x2, y2);
     g.calculate_distances();
 
-    ASSERT_EQ(5, g.distance(0, 1));
-    ASSERT_EQ(5, g.distance(1, 0));
-    ASSERT_EQ(0, g.distance(0, 0));
-    ASSERT_EQ(0, g.distance(1, 1));
+    ASSERT_EQ(5, g.dist(0, 1));
+    ASSERT_EQ(5, g.dist(1, 0));
+    ASSERT_EQ(0, g.dist(0, 0));
+    ASSERT_EQ(0, g.dist(1, 1));
 }
 
 TEST(map_test, two_opt)
@@ -27,7 +28,7 @@ TEST(map_test, two_opt)
 
     map.calculate_distances();
 
-    std::list<int> path;
+    tsp::list path(4);
     path.push_back(0);
     path.push_back(2);
     path.push_back(3);

@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -g -Wall -Wextra -Werror
-OBJECTS = map.o point.o list.o swaplist.o path.o
-TESTS = point_test.o map_test.o list_test.o swaplist_test.o path_test.o
+OBJECTS = map.o point.o list.o
+TESTS = point_test.o map_test.o list_test.o
 
 all: tsp
 
@@ -16,11 +16,14 @@ check: test_runner
 	./test_runner
 
 
-test:
+test: tsp
 	./tsp < ../utils/cities.dat > ans1.tmp
+	sort ans1.tmp | uniq -u | wc -l
 	./tsp < ../utils/random_cities.dat > ans2.tmp
+	sort ans2.tmp | uniq -u | wc -l
 	./tsp < ../utils/big_random_cities.dat > ans3.tmp
-    
+	sort ans3.tmp | uniq -u | wc -l
+        
 
 submit: tsp
 	python kattis_submit.py -f --problem=oldkattis:tsp \
@@ -30,13 +33,11 @@ submit: tsp
 		   map.h	 \
 		   map.cpp   \
 		   list.h    \
-		   list.cpp  \
-           swaplist.h \
-           swaplist.cpp
+		   list.cpp
 
 
 .o :
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf *.o tsp test_runner
+	rm -rf *.o tsp test_runner *.tmp

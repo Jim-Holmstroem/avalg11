@@ -1,4 +1,5 @@
 #include "list.h"
+#include <iostream>
 
 namespace tsp
 {
@@ -45,36 +46,47 @@ namespace tsp
         return n;
     }
 
-    void list::swap(node *a, node *b) const
+    void list::two_opt_swap(node *a, node *b) const
     {
-        if (a == b) return;
+        node *c = a->next;
+        node *d = b->next;
 
-        node *ap = a->prev;
-        node *an = a->next;
+        c->prev = d; // no worries, will be taken care of in loop
+        a->next = b;
+        d->prev = c;
 
-        node *bn = b->next;
-        node *bp = b->prev;
+        node *current = b;
+        node *prev = a;
+        while(current != d) {
+            // the swap
+            current->next = current->prev;
+            current->prev = prev;
 
-        ap->next = b;
-        b->prev  = ap;
-
-        an->prev = b;
-        b->next  = an;
-
-        bp->next = a;
-        a->prev  = bp;
-
-        bn->prev = a;
-        a->next  = bn;
+            //the update
+            prev = current;
+            current = current->next;
+        }
     }
 
     std::ostream& operator<<(std::ostream &out, const list &l)
     {
         list::node *n = l.begin();
+        out << "FROM FRONT: " << std::endl;
         out << "(";
         for(size_t i = 0; i < l.size()-1; ++i) {
             out << n->val << ", ";
             n = n->next;
+        }
+        out << n->val << ")";
+
+        out << std::endl;
+        
+        out << "FROM BACK: " << std::endl;
+        n = l.end();
+        out << "(";
+        for(size_t i = 0; i < l.size()-1; ++i) {
+            out << n->val << ", ";
+            n = n->prev;
         }
         out << n->val << ")";
         return out;

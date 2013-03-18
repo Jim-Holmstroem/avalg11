@@ -34,11 +34,12 @@ namespace tsp
             node* end() const;
             node* begin() const;
 
+            //helpers
+            static void connect(node* a,node* b) { a->next=b; b->prev=a ;};
+
             size_t size() const { return _size; }
 
-            // NOT DEFINED IF A AND B ARE NEIGHBOURS!
-            void swap(node *a, node *b) const;
-
+            void two_opt_swap(node *a, node *b) const;
         private:
             list(const list &other);
             list& operator=(const list& other);

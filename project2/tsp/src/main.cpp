@@ -1,5 +1,5 @@
-#include <vector>
 #include <iostream>
+#include "list.h"
 #include "map.h"
 
 int main(void)
@@ -16,21 +16,15 @@ int main(void)
 
     map.calculate_distances();
     
-    std::list<int> path;
+    tsp::list path(n);
     map.construct_path(path);
     map.optimize_path(path);
-    
 
-    std::cerr << map.path_length(path) << std::endl;
-
-    for(std::list<int>::iterator it = path.begin();it!=path.end();++it)
-        std::cout << *it << std::endl;
-
-    //tsp::list::node *node = path.begin();
-    //for(size_t i = 0; i < path.size(); ++i) {
-    //    std::cout << node->val << std::endl;
-    //    node = node->next;
-    //}
+    tsp::list::node *node = path.begin();
+    for(size_t i = 0; i < path.size(); ++i) {
+       std::cout << node->val << std::endl;
+       node = node->next;
+    }
 
     return 0;
 }

@@ -19,22 +19,23 @@ namespace tsp
         }
     }
 
-    // Running time: O(n^2log(n))
-    void map::nearest_neighbour(std::list<int> &path)
+    // Running time: O(n^2)
+    void map::nearest_neighbour(list &path)
     {
         size_t current_city = 0;
-        std::set<int> visited;
+        std::vector<bool> visited(_size, false);
+        size_t num_visited = 0;
 
-        while (visited.size() < _size) { 
-            visited.insert(current_city);
+        while (num_visited < _size) {
+            num_visited++;
+            visited[current_city] = true;
             path.push_back(current_city);
 
             double min = 1000000000; 
             size_t min_index = -1;
             for (size_t i = 0; i < _size; ++i) {
-                double d = distance(current_city, i);
-                if (d < min && d != 0 && 
-                    visited.find(i) == visited.end()) {
+                double d = dist(current_city, i);
+                if (d < min && d != 0 && !visited[i]) {
                     min = d;
                     min_index = i;
                 }
@@ -43,104 +44,146 @@ namespace tsp
         }
     }
    
-    void map::construct_path(std::list<int> &path)
+    void map::construct_path(list &path)
     {
         nearest_neighbour(path);
     }
 
-    void map::optimize_path(std::list<int> &path)
+    void map::optimize_path(list &path)
     {
         two_opt(path);
+        three_opt(path);
     }
 
-    double map::path_length(const std::list<int> &path) const
+    double map::path_length(const list &path) const
     {
         double d = 0;
-        std::list<int>::const_iterator now = path.begin();
-        std::list<int>::const_iterator next= now;next++;
-
-        for ( ; now != path.end() ; ++now,++next) {
-            if(next==path.end())
-                d += distance(*now,*path.begin()); //reconnect
-            else
-                d += distance(*now, *next);
-            
+        list::node *n = path.begin();
+        for (size_t i = 0; i < path.size(); ++i) {
+            d += dist(n->val, n->next->val);
+            n = n->next;
         }
         return d;
     }
 
-    void map::two_opt(std::list<int> &path)
+    void map::three_opt(list &path)
     {
-        if(path.size()<4)
-            return;
 
-        size_t counter=0;
-        while(counter<(path.size()*path.size()+1)) 
+        long counter=0;
+        bool better = true;
+        long N = 330000000;
+        while(better && counter < N) 
         {
+            list::node *a=path.begin(); //TODO could be randomized
+            list::node *b=a->next->next->next->next;
+            list::node *c=a->next->next;
+            better = false;
+            for ( //make it wider
+                int n=0;
+                b->next!=a && !better && counter < N; 
+                b=b->next,++n
+                ) 
+                {
+                bool first = true;
+                for ( //slide [a,b]
+                    ;
+                    (a != path.begin() || first) && !better && counter < N; //came around again
+                    a=a->next,b = b->next //slide b alongside a
+                    ) 
+                    {
+                       first = false;
+                    for ( //look inside [a,b]
+                        c=a->next->next;
+                        ( c->next != b ) && !better && counter < N;
+                        c=c->next,counter+=10
+                        ) 
+                        {
+                            double edge0 = 
+                                dist(a->val,a->next->val)+
+                                dist(b->val,b->next->val)+
+                                dist(c->val,c->next->val); 
+                            double edge1 = 
+                                dist(a->val,c->next->val)+
+                                dist(c->val,b->next->val)+
+                                dist(b->val,a->next->val);
+                            double edge2 = 
+                                dist(a->val,b->val)+
+                                dist(c->val,b->next->val)+
+                                dist(a->next->val,c->next->val);
+                            
+                            if ( edge1<edge0 && edge1<edge2 ) { 
+                                //only legit in order a<c<b
+                                list::node* an = a->next; //the original a->next
+                                list::connect(a,c->next); //changes a->next
+                                list::connect(c,b->next);
+                                list::connect(b,an); //the old a->next
+                                 
+                                std::swap(b,c); 
+                                better=true;
+                                counter+=5;
+                            } else if ( edge2 < edge0 ) {
+                                list::node* an = a->next;
+                                list::node* bn = b->next;
+                                list::node* cn = c->next;
+                                
+                                list::node* current  = b->prev;
+                                list::node* prev = b;
+                                list::node* next;
 
-        std::list<int>::iterator i = path.begin();
-        std::list<int>::iterator ip = i;
-        ++ip; 
-        for ( ;ip!=path.end();++i,++ip)
-        {
-            
-            std::list<int>::iterator j = ip;
-            std::advance(j,2);
+                                while(current!=c) 
+                                {
+                                    next=current->prev; 
+                                    list::connect(prev,current); 
+                                    prev=current;
+                                    current=next;
+                                    counter+=4;
+                                }
 
-            std::list<int>::iterator jp= j;
-            jp--;
+                                list::connect(a,b);
+                                list::connect(cn,an);
+                                list::connect(c,bn);
+                                
+                                better=true;
+                                counter+=10;
+                            }
 
-            for( ;j!=path.end();++j,++jp)
-            {
-                   // std::cout
-                   // << std::distance(path.begin(),i) << "<"
-                   // << std::distance(path.begin(),jp) << "<" 
-                   // << std::distance(path.begin(),j) << "<" 
-                   // << std::distance(path.begin(),path.end())
-                   // << std::endl;
-  
-                 counter++;
-                 //std::cerr << counter << std::endl;
-                 if(distance(*i,*ip)+distance(*j,*jp) >
-                     distance(*i,*jp)+distance(*j,*ip)
-                    )
-                  {
-                    swaplist::swap(i,j);
-//                    counter=0;
-                //    break;
-                  }
+                       }
+                  } 
             }
-             
         }
-        }
-        
-        /*
-        list::node *a = path.begin();
-        list::node *ap = a->next;
-        for (size_t i = 0; i < path.size(); ++i) {
-            list::node *b = path.begin();
-            list::node *bp = b->next;
-            for (size_t j = 0; j < path.size(); ++j) {
-                if (i == j || ap == b || bp == a) {
-                    continue;
+    }
+    void map::two_opt(list &path)
+    {
+        bool improved_path = true; // only to enter while loop
+        while(improved_path) {
+            improved_path = false;
+            list::node *a = path.begin();
+            list::node *an = a->next;
+            for (size_t i = 0; i < path.size(); ++i) {
+                list::node *b = path.begin();
+                list::node *bn = b->next;
+                for (size_t j = 0; j < path.size(); ++j) {
+                    if (a->val != b->val  && 
+                        an->val != b->val && 
+                        bn->val != a->val) {
+                        double edge1 = dist(a->val, an->val) + 
+                                       dist(b->val, bn->val);
+                        double edge2 = dist(an->val, bn->val) + 
+                                       dist(a->val, b->val);
+                        if (edge1 > edge2) {
+                            path.two_opt_swap(a, b);
+                            an = a->next;
+                            bn = b->next;
+                            improved_path = true;
+                        }
+                    }
+                    b = b->next;
+                    bn = bn->next;
                 }
-                if (distance(a->val, ap->val) + distance(b->val, bp->val) >
-                    distance(a->val, bp->val) + distance(b->val, ap->val)) {
-                    std::cout << "path: " << path << std::endl;
-                    std::cout << "a->val: " << a->val << " b->val: " << b->val << std::endl;
-                    std::cout << "ap->val: " << ap->val << " bp->val: " << bp->val << std::endl;
-                    path.swap(ap, bp);
-                }
-                b = b->next;
-                bp = bp->next;
+                a = a->next;
+                an = an->next;
             }
-            a = a->next;
-            ap = ap->next;
         }
-        */
-
-      //  path = path.get_vector();
-
     }
 
     std::ostream& operator<<(std::ostream& out, map g)
