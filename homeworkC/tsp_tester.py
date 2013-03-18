@@ -2,8 +2,6 @@ from math import *;
 
 p_test = [[1,2],[2,1],[2,2]]
 
-
-
 def distance(p):
     d = [[0 for j in range(len(p))] for i in range(len(p))]
     for i in range(len(p)):
@@ -49,7 +47,6 @@ def nn(p,start): #only uses indces internally
 
 def opt(p):
     return p
-
 
 print nn(p_test,0)
 

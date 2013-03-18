@@ -1,0 +1,8 @@
+*.log
+*.aux
+*.out
+*.toc
+*.add
+*.spl
+*.pyc
+*.pyo

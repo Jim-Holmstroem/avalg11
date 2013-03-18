@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.4.5)  14 OCT 2011 14:52
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.3.18)  18 MAR 2013 18:08
 entering extended mode
  %&-line parsing enabled.
 **doc.tex
@@ -543,7 +543,8 @@ Now handling font encoding PD1 ...
    defining Unicode char U+2026 (decimal 8230)
    defining Unicode char U+2122 (decimal 8482)
    defining Unicode char U+2423 (decimal 9251)
-)) (./doc.aux)
+))
+No file doc.aux.
 \openout1 = `doc.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
@@ -560,7 +561,6 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
 LaTeX Font Info:    ... okay on input line 21.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 21.
 LaTeX Font Info:    ... okay on input line 21.
-
 (/usr/share/texmf-texlive/tex/latex/graphics/color.sty
 Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 
@@ -570,10 +570,10 @@ File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 Package color Info: Driver file: pdftex.def on input line 130.
 
 (/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2009/08/25 v0.04m Graphics/color for pdfTeX
+File: pdftex.def 2010/03/12 v0.04p Graphics/color for pdfTeX
 \Gread@gobject=\count108
 
-(/usr/share/texmf/tex/context/base/supp-pdf.mkii
+(/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count109
 \scratchdimen=\dimen117
@@ -597,14 +597,13 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 LaTeX Info: Redefining \ref on input line 21.
 LaTeX Info: Redefining \pageref on input line 21.
- (./doc.out)
-(./doc.out)
 \@outlinefile=\write3
 \openout3 = `doc.out'.
 
 \AtBeginShipoutBox=\box30
 LaTeX Font Info:    Try loading font information for T1+cmss on input line 23.
- (/usr/share/texmf-texlive/tex/latex/base/t1cmss.fd
+
+(/usr/share/texmf-texlive/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Try loading font information for U+msa on input line 23.
@@ -621,10 +620,25 @@ LaTeX Font Info:    Try loading font information for T1+cmtt on input line 39.
 
 (/usr/share/texmf-texlive/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-) [1
+)
+
+LaTeX Warning: Reference `eq:gcddefinition' on page 1 undefined on input line 4
+1.
+
+
+LaTeX Warning: Reference `eq:gcddomain' on page 1 undefined on input line 46.
+
+[1
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+
+LaTeX Warning: Reference `eq:statement1' on page 2 undefined on input line 71.
+
+
+LaTeX Warning: Reference `eq:statement2' on page 2 undefined on input line 71.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 70--72
 
  []
@@ -635,6 +649,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 73--81
  []
 
 
+LaTeX Warning: Reference `eq:statement1' on page 2 undefined on input line 83.
+
+
+LaTeX Warning: Reference `eq:statement2' on page 2 undefined on input line 84.
+
+
+LaTeX Warning: Reference `eq:statement6' on page 2 undefined on input line 88.
+
+
 Overfull \hbox (53.44283pt too wide) in paragraph at lines 112--113
 []\T1/cmr/m/n/10.95 Total-bitcomplexity $\OT1/cmr/m/n/10.95 = [] [] = \OML/cmm/
 m/it/10.95 O\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 n[] \OT1/cmr/m/n/10.95 + \O
@@ -642,32 +665,75 @@ ML/cmm/m/it/10.95 n[]\OT1/cmr/m/n/10.95 ) \OMS/cmsy/m/n/10.95 ^^C \OML/cmm/m/it
 /10.95 O\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 n\OT1/cmr/m/n/10.95 ) = []$ 
  []
 
-[2] [3] [4] [5] (./doc.aux) ) 
+[2]
+
+LaTeX Warning: Reference `eq:remaindertheo' on page 3 undefined on input line 1
+46.
+
+
+LaTeX Warning: Reference `eq:modrule' on page 3 undefined on input line 150.
+
+
+LaTeX Warning: Reference `eq:modrule' on page 3 undefined on input line 151.
+
+
+LaTeX Warning: Reference `eq:congruenceproblem' on page 3 undefined on input li
+ne 155.
+
+
+LaTeX Warning: Reference `eq:bigstep' on page 3 undefined on input line 155.
+
+
+LaTeX Warning: Reference `eq:congruenceproblem' on page 3 undefined on input li
+ne 170.
+
+
+LaTeX Warning: Reference `eq:congruencecombination' on page 3 undefined on inpu
+t line 170.
+
+
+LaTeX Warning: Reference `eq:modrule' on page 3 undefined on input line 172.
+
+
+LaTeX Warning: Reference `eq:modrule' on page 3 undefined on input line 175.
+
+
+LaTeX Warning: Reference `eq:congruenceproblem' on page 3 undefined on input li
+ne 187.
+
+[3] [4] [5] (./doc.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 6839 strings out of 493848
- 96402 string characters out of 1152824
- 189638 words of memory out of 3000000
- 9958 multiletter control sequences out of 15000+50000
- 18006 words of font info for 55 fonts, out of 3000000 for 9000
+ 6831 strings out of 493848
+ 96364 string characters out of 1152823
+ 189397 words of memory out of 3000000
+ 9953 multiletter control sequences out of 15000+50000
+ 20346 words of font info for 58 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
  43i,17n,43p,320b,320s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-supe
-r-t1.enc}</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></
-usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/t
-exmf-texlive/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-texlive
-/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1
-/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
-onts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy1
-0.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/
-share/texmf-texlive/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/
-texmf/fonts/type1/public/cm-super/sfrm1095.pfb></usr/share/texmf/fonts/type1/pu
-blic/cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfsx10
-95.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfsx1200.pfb></usr/share/t
-exmf/fonts/type1/public/cm-super/sfsx2074.pfb></usr/share/texmf/fonts/type1/pub
-lic/cm-super/sftt1095.pfb>
-Output written on doc.pdf (5 pages, 228277 bytes).
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
+s/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.p
+fb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/shar
+e/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-tex
+live/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-texlive/fonts/t
+ype1/public/amsfonts/symbols/msam10.pfb></usr/share/texmf/fonts/type1/public/cm
+-super/sfbx1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1095.pfb>
+</usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share/texmf/fo
+nts/type1/public/cm-super/sfsx1095.pfb></usr/share/texmf/fonts/type1/public/cm-
+super/sfsx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfsx2074.pfb><
+/usr/share/texmf/fonts/type1/public/cm-super/sftt1095.pfb>
+Output written on doc.pdf (5 pages, 237011 bytes).
 PDF statistics:
- 158 PDF objects out of 1000 (max. 8388607)
+ 120 PDF objects out of 1000 (max. 8388607)
  29 named destinations out of 1000 (max. 500000)
- 65 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
