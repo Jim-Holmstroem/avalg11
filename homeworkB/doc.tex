@@ -40,13 +40,13 @@ linkcolor=black, citecolor=black, urlcolor=blue]{hyperref}
 \subtitle{Homework B}
 
 \begin{document}
-
+%CORRECTION ``Bra!!''
 \maketitle
 \thispagestyle{empty}
 
 %-----------------------
 \begin{exercise}
-{\bf
+{\bf %CORRECTION A big +
 Using the 0/1-principle for sorting networks, either show that the following
 sorting network correctly sorts 4 inputs, or find an input where it fails.
 }
@@ -250,7 +250,7 @@ To find the number $x$ that encrypts to my personal number $(8905037571)$ we
 need to go the other way by decrypting. \\
 $m=c^d \ (mod \ n) =\
 $\verb+superpower+$(c,d,n)=\{c=8905037571\}=\underline{2534986786188}$
-
+%CORRECTION Inte rätt tal, möjligen overflow (fast jag körde python)
 \end{solution}
 \clearpage
 %-----------------------
@@ -354,14 +354,16 @@ Explain your algorithm, why it works, and analyze its complexity.
    \verb+  + If $x^m \equiv 1 \ (mod \ n)$ (not needed here)
          $\bigvee$ 
          $\exists i \in [0,q-1]:x^{2^im} \equiv -1 \ (mod \ n)$ \\
-   \verb+  + then ``inconclusive'' (do next \verb+LOOP+) else return ``n is composite'' \\
+   \verb+  + then ``inconclusive'' (do next \verb+LOOP+) else return ``n is composite'' \\ %CORRECTION on ``If'' and ``else'' (how so?)
    return ``prob. prime''
 
    %Where the $\exists i \in [0,q-1]:b^{2^im} \equiv -1 \ (mod \ n)$ part instead could be done more cunning by doing $x \leftarrow x^2 \ (mod \ n)$ \\
 
-   Knowing that $n$ is Carmicheal number the only intresting part in Miller Rabin is the $x \leftarrow x^2 \equiv 1 \ (mod \ n)$ (equivalent to the $x^{2^im}$-part but more cunning) wich is foreach 2 factor in $(n-1)$ \\
+   Knowing that $n$ is Carmicheal number the only intresting part in %CORRECTION This is when one fins x^(2^i m)=1(mod n) for some i<q what about the case when x^(n-1) \neq1(mod n) is found? (this can happen)
+   Miller Rabin is the $x \leftarrow x^2 \equiv 1 \ (mod \ n)$ 
+   (equivalent to the $x^{2^im}$-part but more cunning) wich is foreach 2 factor in $(n-1)$ \\ 
    
-   {\bf The algorithm:} \\
+   {\bf The algorithm:} \\ %CORRECTION good
    When Miller-Rabin hits then gives us that the base $x$ that fullfills 
    $x^2 \equiv 1 \ (mod \ n) \bigwedge x \not\equiv \pm 1$ (so let us use this)
    
