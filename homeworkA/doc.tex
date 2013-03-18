@@ -33,7 +33,7 @@ titlepage=false,headings=small,parskip=half,version=last]{scrartcl}
 
 \subsection{Validate}
 
-In order from the top.
+In order from the top. %CORRECTION Got a big + for this one
 
 \begin{equation} \label{eq:statement1}
     \verb+if (b > a) return gcd(b, a)+
@@ -64,7 +64,7 @@ Since we now that we have passed the above statement we have that $b$ is odd thu
     \verb+else if (b is even) return gcd(a, b/2)+
 \end{equation}
 The same way as above but $a \leftrightarrow b$
-
+%CORRECTION A few minor misses in the following equation
 \begin{equation} \label{eq:statement6}
     \verb+else return gcd(b,a-b)+
 \end{equation}
@@ -85,7 +85,7 @@ $\Rightarrow$ will always land in the basecase (\ref{eq:statement2}) and return 
 
 \subsection{Number of recursive calls}
 
-In (\ref{eq:statement6}) $a,b \in Odd$ so the gcd will be called with $b \in Odd$ and $a-b \in Even$.
+In (\ref{eq:statement6}) $a,b \in Odd$ so the gcd will be called with $b \in Odd$ and $a-b \in Even$. %CORRECTION ``b\in Odd and a-b\in Even'' good
 %Excluding (\ref{eq:statement1}),(\ref{eq:statement2}) and wich of (\ref{eq:statement4}) or (\ref{eq:statement} is called since it irrelevant for the number of calls. 
 We now know from above that there can only be a constant number of calls to the statments ``not dividing by 2'' before ``dividing by 2'' is called $\Rightarrow$ number of calls $O(log(a)+log(b))=O(log(ab)$
 
@@ -103,14 +103,14 @@ We now know from above that there can only be a constant number of calls to the 
 $n=max(n_a,n_b)$ where $n_a,n_b$ is the number of bits in $a,b$
 
 Assuming the number is represented in the base 2, since we are asked for bit complexity.
-Operation-cost:\\
+Operation-cost:\\ %CORRECTION very good
 $2a$ and $a/2$ is $O(n_a)$ ``*'' and ``/'' with it's base you can just move all digits (bits in this case) one step in the representation (you ``shift'' the digits).\\ 
 $a>b,a-b$ trivially is $O(n)$
 
 The number of recursive calls on the number of bits: $O(log(ab))=O(log(2^{n_a+n_b})=O(n_a+n_b))$
 
 Total-bitcomplexity $= \sum{\#{calls_i}*{operationcost_i}} = O(n_a+n_b)*O(n) = \underline{O((n_a+n_b)max(n_a,n_b))}$
-
+%CORRECTION This is also = O((n_a+n_b)^2) = O(max(n_a,n_b)^2)
 \section{Problem 2}
 \begin{equation*}
     N=8905037571, \\
@@ -190,10 +190,11 @@ The $x$ found solves (\ref{eq:congruenceproblem}) and $x<N(N+1) \qed$
 
 An element is denote by $m$. With unitcost RAM you can't allocate to much RAM (memory allocated $\le 2^w=n$) making so for example straight up bucketsort will not do it.
 
-Intending to use radix sort using $\lceil{log_2(n+1)}\rceil$ at a time.
+Intending to use radix sort using $\lceil{log_2(n+1)}\rceil$ at a time. %CORRECTION Got a ``WHAT'' on ceil(log2(n+1))
 We know that since $m=O(n^{10})$ $m$ will have $O(10*log(n))$ number of bits.
 Sorting with $\lceil{log_2(n+1)}\rceil$ at a time the largest number occuring is $O(n)$ and we can do this sorting step by bucket-sort (assuming you have enough space to allocate, else you just lower the sorting size by a constant, the following arguments will still hold) in $O(n)$ and repeat this $10$ times.
 The resuling sort will take $O(10n)$ and since 10 is a constant we get $O(n)$ $\qed$
+%CORRECTION ``WHICH BASE IS BEING USED?''
 
 \section{Problem 4}
 
@@ -217,5 +218,7 @@ Each resolution and resolution check will take $O(1)$ but for safety reason one 
 The same goes for the container of clauses, answer etc, as long as you go with a structure which has polynomal access time.
 
 All the operators are of polynomal order and since polynoms are closed under both addition and multiplication ($n^{2}Poly(n)=Poly(n)$) we have a resulting polynomal running time $\qed$
+
+%CORRECTION ``Right idea but hard to comprahend your explaination''
 
 \end{document}
